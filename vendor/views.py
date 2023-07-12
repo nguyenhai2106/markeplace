@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from accounts.forms import UserForm
 from vendor.forms import VendorForm
 from accounts.models import User
@@ -10,7 +10,10 @@ from django.core.exceptions import ObjectDoesNotExist
 
 # Create your views here.
 def registerVendor(request):
-    if request.method == 'POST':
+    if request.user.is_authenticated:
+        messages.warning(request, "You are already logged in") 
+        return redirect("dashboard")
+    elif request.method == 'POST':
         user_form = UserForm(request.POST)
         vendor_form = VendorForm(request.POST, request.FILES)
         if user_form.is_valid() and vendor_form.is_valid():
@@ -32,6 +35,7 @@ def registerVendor(request):
                 vendor.user_profile = user_profile
                 vendor.save()
                 messages.success(request, "Your restaurent has been registered successfully. Please wait for the approval.")
+                return redirect("login")
             except ObjectDoesNotExist:
                 messages.error(request, "UserProfile not found for the user.")
         else:

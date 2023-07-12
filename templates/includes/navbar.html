@@ -69,15 +69,20 @@
             </div>
           </li>
         </ul>
-        <form class="d-flex gap-2">
-          <a class="btn btn-success" href="#">Login</a>
-          <a class="btn btn-warning text-white" href="{% url 'registerUser' %}"
-            >User Register</a
-          >
-          <a class="btn btn-danger" href="{% url 'registerVendor' %}"
-            >Vendor Register</a
-          >
-        </form>
+        <div class="d-flex gap-2">
+          {% if  user.is_authenticated %}
+            <a class="btn btn-outline-info" href="{% url 'myAccount' %}">My Account</a>
+            <a class="btn btn-outline-danger" href="{% url 'logout' %}">Logout</a>
+          {% else %}
+            <a class="btn btn-success" href="{% url 'login' %}">Login</a>
+            <a class="btn btn-warning text-white" href="{% url 'registerUser' %}"
+              >User Register</a
+            >
+            <a class="btn btn-danger" href="{% url 'registerVendor' %}"
+              >Vendor Register</a
+            >
+          {% endif %}
+        </div>
       </div>
     </div>
   </nav>

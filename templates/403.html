@@ -1,0 +1,34 @@
+{% extends 'base.html' %} {% block content %}
+  <!-- Main Section Start -->
+  <div class="main-section border-top">
+    <div style="
+      margin-top: 0px;
+      padding-top: 20px;
+      padding-bottom: 60px;
+      margin-bottom: 0px;
+	 width: 90%;
+	 margin: auto;
+    ">
+      <div class="container">
+        <div class="row">
+          <div class="col-12">
+            <div class="user-dashboard loader-holder">
+              <div class="user-holder">
+                <h4 class="text-center" style="margin-bottom: 0">FIRBIDDEN</h4>
+                <hr />
+                <div id="restaurant-sets-holder">
+                  <p class="fw-bold text-center">You don't have permission to access this resource.</p>
+                </div>
+              </div>
+              <div class="col-12">
+                <!-- Load message -->
+                {% include 'includes/alerts.html' %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Main Section End -->
+{% endblock %}

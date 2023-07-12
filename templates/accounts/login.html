@@ -1,0 +1,66 @@
+{% extends 'base.html' %} {% block content %}
+
+<!-- Main Section Start -->
+<div class="main-section border-top">
+  <div style="
+      margin-top: 0px;
+      padding-top: 20px;
+      padding-bottom: 60px;
+      margin-bottom: 0px;
+	 width: 90%;
+	 margin: auto;
+    ">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+          <div class="user-dashboard loader-holder">
+            <div class="user-holder">
+              <h4 class="text-center" style="margin-bottom: 0">
+                SIGN IN
+              </h4>
+              <hr />
+              <div id="restaurant-sets-holder">
+                <form class="form-fields-set foodbakery-dev-restaurant-form row" method="POST"
+                  action="{% url 'login' %}">
+                  {%csrf_token %}
+                  <div class="col-12 col-md-4 mx-auto border px-0 rounded-2">
+                    <div class="col-12 text-center py-3 bg-danger text-white mx-0 rounded-top-2">
+                      <h5 class=" p-0 m-0">Food Bakery</h5>
+                    </div>
+                    <div class="col-12 p-3 pb-0">
+                      <div class="field-holder">
+                        <label for="email" class="form-label mb-3">Email address</label>
+                        <input type="email" class="form-control" id="email" name="email" aria-describedby="emailHelp"
+                          placeholder="Enter your email address">
+                      </div>
+                    </div>
+                    <div class="col-12 p-3 pb-0">
+                      <div class="field-holder">
+                        <label for="password" class="form-label mb-3">Password</label>
+                        <input type="password" class="form-control" id="password" name="password"
+                          placeholder="Enter your password">
+                      </div>
+                    </div>
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 m-3">
+                      <div class="field-holder">
+                        <input type="submit" value="Submit" class="btn btn-danger px-3" />
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <!-- Load message -->
+                        {% include 'includes/alerts.html' %}
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Main Section End -->
+{% endblock %}
