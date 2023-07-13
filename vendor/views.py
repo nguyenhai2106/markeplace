@@ -6,6 +6,7 @@ from django.template.defaultfilters import slugify
 from accounts.models import UserProfile
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
+from accounts.utils import send_verification_email
 
 
 # Create your views here.
@@ -35,6 +36,8 @@ def registerVendor(request):
                 vendor.user_profile = user_profile
                 vendor.save()
                 messages.success(request, "Your restaurent has been registered successfully. Please wait for the approval.")
+                # Send verification email
+                send_verification_email(request, user)
                 return redirect("login")
             except ObjectDoesNotExist:
                 messages.error(request, "UserProfile not found for the user.")
