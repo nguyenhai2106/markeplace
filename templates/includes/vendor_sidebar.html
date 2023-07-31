@@ -1,0 +1,48 @@
+<style>
+    .card ul li a:hover {
+        color: red;
+        cursor: pointer;
+    }
+
+    .list-group-item a {
+        font-weight: bold;
+    }
+
+    a {
+        text-decoration: none;
+    }
+
+</style>
+<div class="card">
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item ">
+            <a href="{% url 'vendorDashboard' %}"
+               class="text-secondary {% if '/accounts/vendorDashboard/' == request.path or '/accounts/vendor/' == request.path %}text-danger{% endif %}">
+                <i class="fa-solid fa-gauge"></i>&nbsp;&nbsp;&nbsp;&nbsp;DASHBOARD</a>
+        </li>
+        <li class="list-group-item">
+            <a href="{% url 'vendorProfile' %}"
+               class="text-secondary {% if '/vendor/profile/' == request.path %}text-danger{% endif %}"><i
+                    class="fa-solid fa-utensils"></i>&nbsp;&nbsp;&nbsp;&nbsp;MY
+                RESTAURANT</a></li>
+        <li class="list-group-item">
+            <a href="{% url 'vendorProfile' %}" class="text-secondary"><i class="fa-solid fa-bars"></i>&nbsp;&nbsp;&nbsp;&nbsp;MENU
+                BUILDER</a></li>
+        <li class="list-group-item"><a href="{% url 'vendorDashboard' %}" class="text-secondary"><i
+                class="fa-solid fa-cart-shopping"></i>&nbsp;&nbsp;&nbsp;&nbsp;ORDERS</a>
+        </li>
+        <li class="list-group-item"><a href="{% url 'vendorDashboard' %}" class="text-secondary"><i
+                class="fa-solid fa-money-check-dollar"></i>&nbsp;&nbsp;&nbsp;&nbsp;EARNINGS</a>
+        </li>
+        <li class="list-group-item"><a href="{% url 'vendorDashboard' %}" class="text-secondary"><i
+                class="fa-regular fa-file"></i>&nbsp;&nbsp;&nbsp;&nbsp;STATEMENT</a>
+        </li>
+        <li class="list-group-item"><a href="{% url 'vendorDashboard' %}" class="text-secondary"><i
+                class="fa-solid fa-lock"></i>&nbsp;&nbsp;&nbsp;&nbsp;CHANGE
+            PASSWORD</a></li>
+        <li class="list-group-item"><a href="{% url 'vendorDashboard' %}" class="text-secondary"><i
+                class="fa-solid fa-arrow-right-from-bracket"></i>&nbsp;&nbsp;&nbsp;&nbsp;SIGN
+            OUT</a>
+        </li>
+    </ul>
+</div>

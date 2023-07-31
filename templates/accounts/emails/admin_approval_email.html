@@ -1,0 +1,10 @@
+{% autoescape off %}
+<p>Xin chào {{ user.first_name }},</p>
+{% if is_approved %}
+    <p>Xin chúc mừng! Nhà hàng của bạn đã được phê duyệt!</p>
+{% else %}
+    <p>Rất tiếc! Bạn không đủ điều kiện để đăng nhà hàng lên sàn giao dịch của chúng tôi, vui lòng liên hệ
+        thegioiorigami@gmail.com để biết thêm chi tiết.
+        Xin cảm ơn.</p>
+{% endif %}
+{% endautoescape %}

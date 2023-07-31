@@ -1,7 +1,10 @@
-{% extends 'base.html' %} {% block content %}
-  <!-- Main Section Start -->
-  <div class="main-section border-top">
-    <div style="
+{% extends 'base.html' %}
+{% load static %}
+{% include 'includes/alerts.html' %}
+{% block content %}
+    <!-- Main Section Start -->
+    <div class="main-section border-top">
+        <div style="
       margin-top: 0px;
       padding-top: 20px;
       padding-bottom: 60px;
@@ -9,27 +12,67 @@
 	 width: 90%;
 	 margin: auto;
     ">
-      <div class="container">
-        <div class="row">
-          <div class="col-12">
-            <div class="user-dashboard loader-holder">
-              <div class="user-holder">
-                <h4 class="text-center" style="margin-bottom: 0">ACCOUNT DASHBOARD</h4>
-                <hr />
-                <div id="restaurant-sets-holder">
-                  <p>Welcome, {{ user.username }}</p>
-                  <p>This is a {{ user.get_role }}</p>
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="user-dashboard loader-holder">
+                            <div class="user-holder">
+                                <h4 class="text-center" style="margin-bottom: 0">ACCOUNT DASHBOARD</h4>
+                                <hr/>
+                                <div id="restaurant-sets-holder">
+                                    <p>Welcome, {{ user.username }}</p>
+                                    <p>This is a {{ user.get_role }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              </div>
-              <div class="col-12">
-                <!-- Load message -->
-                {% include 'includes/alerts.html' %}
-              </div>
             </div>
-          </div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-3">
+                        {% include 'includes/customer_sidebar.html' %}
+                    </div>
+                    <div class="col-9">
+                        <div class="card">
+                            <div class="card-header">
+                                <span class="fw-bold">RECENT ORDER</span>
+                            </div>
+                            <div class="card-body">
+                                <select class="form-select" aria-label="Default select example">
+                                    <option selected>Open this select menu</option>
+                                    <option value="1">One</option>
+                                    <option value="2">Two</option>
+                                    <option value="3">Three</option>
+                                </select>
+                                <table class="table mt-2">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col" class="text-center">Id</th>
+                                        <th scope="col" class="text-center">Date</th>
+                                        <th scope="col" class="text-center">Total</th>
+                                        <th scope="col" class="text-center">Charges</th>
+                                        <th scope="col" class="text-center">Received</th>
+                                        <th scope="col" class="text-center">Status</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td scope="row" class="text-center">1</td>
+                                        <td class="text-center">Mark</td>
+                                        <td class="text-center">Otto</td>
+                                        <td class="text-center">@mdo</td>
+                                        <td class="text-center">@mdo</td>
+                                        <td class="text-center">Completed</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
-  <!-- Main Section End -->
+    <!-- Main Section End -->
 {% endblock %}

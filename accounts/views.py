@@ -8,6 +8,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.exceptions import PermissionDenied
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.contrib.auth.tokens import default_token_generator
+from vendor.models import Vendor
 
 
 # Create your views here.
@@ -30,7 +31,7 @@ def check_role_customer(user):
 
 def registerUser(request):
     if request.user.is_authenticated:
-        messages.warning(request, "You are already logged in") 
+        messages.warning(request, "You are already logged in")
         return redirect("myAccount")
     elif request.method == 'POST':
         form = UserForm(request.POST)
@@ -40,15 +41,16 @@ def registerUser(request):
             username = form.cleaned_data['username']
             email = form.cleaned_data['email']
             password = form.cleaned_data['password']
-            user = User.objects.create_user(first_name=first_name, last_name=last_name, username=username, email=email, password=password)
+            user = User.objects.create_user(first_name=first_name, last_name=last_name, username=username, email=email,
+                                            password=password)
             user.role = User.CUSTOMER
             user.save()
-            
+
             # Send verification email
             mail_subject = 'Please active your account'
             email_template = 'accounts/emails/account_verification_email.html'
             send_verification_email(request, user, mail_subject, email_template)
-            
+
             messages.success(request, "Your account has been registered successfully")
             return redirect('login')
         else:
@@ -56,14 +58,14 @@ def registerUser(request):
     else:
         form = UserForm()
     context = {
-        'form':form,
+        'form': form,
     }
     return render(request, 'accounts/registerUser.html', context)
 
 
 def login(request):
     if request.user.is_authenticated:
-        messages.warning(request, "You are already logged in") 
+        messages.warning(request, "You are already logged in")
         return redirect("myAccount")
     elif request.method == "POST":
         email = request.POST['email']
@@ -95,7 +97,11 @@ def myAccount(request):
 @login_required(login_url='login')
 @user_passes_test(check_role_vendor)
 def vendorDashboard(request):
-    return render(request, 'accounts/vendorDashboard.html')
+    vendor = Vendor.objects.get(user=request.user)
+    context = {
+        'vendor': vendor
+    }
+    return render(request, 'accounts/vendorDashboard.html', context)
 
 
 @login_required(login_url='login')
@@ -114,7 +120,7 @@ def activate(request, uidb64, token):
     if user is not None and default_token_generator.check_token(user, token):
         user.is_active = True
         user.save()
-        messages.success(request, "Congratulation! Your account has been actived")
+        messages.success(request, "Congratulation! Your account has been activated")
     else:
         messages.error(request, "Invalid activation link")
     return redirect('myAccount')
@@ -128,21 +134,21 @@ def forgot_password(request):
             mail_subject = 'Reset Your Password'
             email_template = 'accounts/emails/reset_password_email.html'
             send_verification_email(request, user, mail_subject, email_template)
-            messages.success(request, "Đường dẫn tạo lại mật khẩu đã đã được gửi đến email của bạn")    
+            messages.success(request, "Đường dẫn tạo lại mật khẩu đã đã được gửi đến email của bạn")
             return redirect('login')
         else:
-            messages.error(request, "Email không đúng, vui lòng kiểm tra lại")    
+            messages.error(request, "Email không đúng, vui lòng kiểm tra lại")
             return redirect('forgot_password')
     return render(request, 'accounts/forgot_password.html')
 
-        
+
 def request_password_validate(request, uidb64, token):
     try:
         uid = urlsafe_base64_decode(uidb64).decode()
         user = User._default_manager.get(pk=uid)
     except(TypeError, ValueError, OverflowError, User.DoesNotExist):
         user = None
-    
+
     if user is not None and default_token_generator.check_token(user, token):
         request.session['uid'] = uid
         messages.success(request, "Vui lòng điền các thông tin sau để thay đổi mật khẩu của bạn")
@@ -166,5 +172,5 @@ def reset_password(request):
             user.save()
             messages.success(request, "Mật khẩu đã được thay đổi thành công")
             return redirect('login')
-            
+
     return render(request, 'accounts/reset_password.html')

@@ -12,7 +12,7 @@ from accounts.utils import send_verification_email
 # Create your views here.
 def registerVendor(request):
     if request.user.is_authenticated:
-        messages.warning(request, "You are already logged in") 
+        messages.warning(request, "You are already logged in")
         return redirect("dashboard")
     elif request.method == 'POST':
         user_form = UserForm(request.POST)
@@ -23,7 +23,8 @@ def registerVendor(request):
             username = user_form.cleaned_data['username']
             email = user_form.cleaned_data['email']
             password = user_form.cleaned_data['password']
-            user = User.objects.create_user(first_name=first_name, last_name=last_name, username=username, email=email, password=password)
+            user = User.objects.create_user(first_name=first_name, last_name=last_name, username=username, email=email,
+                                            password=password)
             user.role = User.VENDOR
             user.save()
             vendor = vendor_form.save(commit=False)
@@ -35,7 +36,8 @@ def registerVendor(request):
                 user_profile = UserProfile.objects.get(user=user)
                 vendor.user_profile = user_profile
                 vendor.save()
-                messages.success(request, "Your restaurent has been registered successfully. Please wait for the approval.")
+                messages.success(request,
+                                 "Your restaurent has been registered successfully. Please wait for the approval.")
                 # Send verification email
                 send_verification_email(request, user)
                 return redirect("login")
@@ -43,27 +45,31 @@ def registerVendor(request):
                 messages.error(request, "UserProfile not found for the user.")
         else:
             error_list = ""
-            if user_form.errors: 
+            if user_form.errors:
                 print("DEBUGS:", user_form.errors)
                 for error_messages in user_form.errors.values():
-                        for error_message in error_messages:
-                            error_list += error_message + " "  
-                        break                      
+                    for error_message in error_messages:
+                        error_list += error_message + " "
+                    break
             else:
                 print("DEBUGS:", vendor_form.errors)
                 for error_messages in vendor_form.errors.values():
-                        for error_message in error_messages:
-                            error_list += error_message + " "  
-                        break
+                    for error_message in error_messages:
+                        error_list += error_message + " "
+                    break
             messages.error(request, error_list)
     else:
         user_form = UserForm()
         vendor_form = VendorForm()
     user_form = UserForm()
-    vendor_form = VendorForm() 
+    vendor_form = VendorForm()
     context = {
         'user_form': user_form,
         'vendor_form': vendor_form
     }
-    
+
     return render(request, 'accounts/registerVendor.html', context)
+
+
+def vendor_profile(request):
+    return render(request, 'vendor/vendor_profile.html')
