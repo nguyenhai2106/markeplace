@@ -1,6 +1,8 @@
-from django.shortcuts import render, redirect
-from accounts.forms import UserForm
-from vendor.forms import VendorForm
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.shortcuts import render, redirect, get_object_or_404
+from accounts.forms import UserForm, UserProfileForm
+from accounts.views import check_role_vendor
+from vendor.forms import VendorForm, Vendor
 from accounts.models import User
 from django.template.defaultfilters import slugify
 from accounts.models import UserProfile
@@ -37,7 +39,7 @@ def registerVendor(request):
                 vendor.user_profile = user_profile
                 vendor.save()
                 messages.success(request,
-                                 "Your restaurent has been registered successfully. Please wait for the approval.")
+                                 "Your restaurant has been registered successfully. Please wait for the approval.")
                 # Send verification email
                 send_verification_email(request, user)
                 return redirect("login")
@@ -71,5 +73,31 @@ def registerVendor(request):
     return render(request, 'accounts/registerVendor.html', context)
 
 
+@login_required(login_url='login')
+@user_passes_test(check_role_vendor)
 def vendor_profile(request):
-    return render(request, 'vendor/vendor_profile.html')
+    profile = get_object_or_404(UserProfile, user=request.user)
+    vendor = get_object_or_404(Vendor, user=request.user)
+
+    if request.method == 'POST':
+        profile_form = UserProfileForm(request.POST, request.FILES, instance=profile)
+        vendor_form = VendorForm(request.POST, request.FILES, instance=vendor)
+        if profile_form.is_valid() and vendor_form.is_valid():
+            profile_form.save()
+            vendor_form.save()
+            messages.success(request, 'Các thông tin đã được cập nhật')
+            return redirect('vendorProfile')
+        else:
+            print(profile_form.errors)
+            print(vendor_form.errors)
+    else:
+        profile_form = UserProfileForm(instance=profile)
+        vendor_form = VendorForm(instance=vendor)
+    context = {
+        'profile_form': profile_form,
+        'vendor_form': vendor_form,
+        'profile': profile,
+        'vendor': vendor
+    }
+
+    return render(request, 'vendor/vendor_profile.html', context)

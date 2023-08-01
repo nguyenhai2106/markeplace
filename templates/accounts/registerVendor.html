@@ -1,134 +1,134 @@
 {% extends 'base.html' %} {% block content %}
 
-<!-- Main Section Start -->
-<div class="main-section">
-	<div class="page-section nopadding cs-nomargin" style="
+    <!-- Main Section Start -->
+    <div class="main-section">
+        <div class="page-section nopadding cs-nomargin" style="
       margin-top: 0px;
       padding-top: 60px;
       padding-bottom: 60px;
       margin-bottom: 0px;
     ">
-		<div class="container">
-			<div class="row">
-				<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-					<div class="user-dashboard loader-holder">
-						<div class="user-holder">
-							<h4 class="text-center" style="margin-bottom: 0">
-								PARTNER WITH FOOD BAKERY
-							</h4>
-							<p class="text-center">
-								Register your restaurent with Food Bakery marketplace and get
-								more customers.
-							</p>
-							<hr />
-							<div id="restaurant-sets-holder">
-								<form class="form-fields-set foodbakery-dev-restaurant-form" method="POST"
-									enctype="multipart/form-data" action="{% url 'registerVendor' %}">
-									{%csrf_token %}
-									<div class="row gy-3">
-										<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-											<div class="field-holder">
-												<label for="first_name" class="form-label fw-semibold">First
-													Name</label>
-												{{user_form.first_name}}
-											</div>
-										</div>
-										<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-											<div class="field-holder">
-												<label for="last_name" class="form-label fw-semibold">Last
-													Name</label>
-												{{user_form.last_name}}
-											</div>
-										</div>
-										<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-											<div class="field-holder">
-												<label for="email" class="form-label fw-semibold">Email
-													Address</label>
-												{{user_form.email}}
-											</div>
-										</div>
-										<div class=" col-lg-6 col-md-6 col-sm-6 col-xs-12">
-											<div class="field-holder">
-												<label for="username"
-													class="form-label fw-semibold">Username</label>
-												{{user_form.username}}
-											</div>
-										</div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class="user-dashboard loader-holder">
+                            <div class="user-holder">
+                                <h4 class="text-center" style="margin-bottom: 0">
+                                    PARTNER WITH FOOD BAKERY
+                                </h4>
+                                <p class="text-center">
+                                    Register your restaurent with Food Bakery marketplace and get
+                                    more customers.
+                                </p>
+                                <hr/>
+                                <div id="restaurant-sets-holder">
+                                    <form class="form-fields-set foodbakery-dev-restaurant-form" method="POST"
+                                          enctype="multipart/form-data" action="{% url 'registerVendor' %}">
+                                        {% csrf_token %}
+                                        <div class="row gy-3">
+                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                <div class="field-holder">
+                                                    <label for="first_name" class="form-label fw-semibold">First
+                                                        Name</label>
+                                                    {{ user_form.first_name }}
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                <div class="field-holder">
+                                                    <label for="last_name" class="form-label fw-semibold">Last
+                                                        Name</label>
+                                                    {{ user_form.last_name }}
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                <div class="field-holder">
+                                                    <label for="email" class="form-label fw-semibold">Email
+                                                        Address</label>
+                                                    {{ user_form.email }}
+                                                </div>
+                                            </div>
+                                            <div class=" col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                <div class="field-holder">
+                                                    <label for="username"
+                                                           class="form-label fw-semibold">Username</label>
+                                                    {{ user_form.username }}
+                                                </div>
+                                            </div>
 
 
-										<div class=" col-lg-6 col-md-6 col-sm-12 col-xs-12">
-											<div class="field-holder">
-												<label for="password"
-													class="form-label fw-semibold">Password</label>
-												{{user_form.password}}
-											</div>
-										</div>
-										<div class=" col-lg-6 col-md-6 col-sm-12 col-xs-12">
-											<div class="field-holder">
-												<label for="confirm_password"
-													class="form-label fw-semibold">Confirm
-													Password</label>
-												{{user_form.confirm_password}}
-											</div>
-										</div>
+                                            <div class=" col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                                <div class="field-holder">
+                                                    <label for="password"
+                                                           class="form-label fw-semibold">Password</label>
+                                                    {{ user_form.password }}
+                                                </div>
+                                            </div>
+                                            <div class=" col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                                <div class="field-holder">
+                                                    <label for="confirm_password"
+                                                           class="form-label fw-semibold">Confirm
+                                                        Password</label>
+                                                    {{ user_form.confirm_password }}
+                                                </div>
+                                            </div>
 
 
-										<div class=" col-lg-6 col-md-6 col-sm-12 col-xs-12">
-											<div class="field-holder">
-												<label for="vendor_name"
-													class="form-label fw-semibold">Vendor
-													Name</label>
-												{{vendor_form.vendor_name}}
-											</div>
-										</div>
-										<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-											<div class="field-holder">
-												<label for="vendor_license"
-													class="form-label fw-semibold">Vendor
-													License</label>
-												<div>
-													{{vendor_form.vendor_license}}
-												</div>
-											</div>
-										</div>
-									</div>
+                                            <div class=" col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                                <div class="field-holder">
+                                                    <label for="vendor_name"
+                                                           class="form-label fw-semibold">Vendor
+                                                        Name</label>
+                                                    {{ vendor_form.vendor_name }}
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                                <div class="field-holder">
+                                                    <label for="vendor_license"
+                                                           class="form-label fw-semibold">Vendor
+                                                        License</label>
+                                                    <div>
+                                                        {{ vendor_form.vendor_license }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
 
-									<div class="row">
-										{% for field in form %}
-										{% if field.errors %}
-										{% for error in field.errors %}
-										<p style="color: red">{{error}}</p>
-										{% endfor %}
-										{% endif %}
-										{% endfor %}
-										<p style="color: red">
-											{{form.non_field_errors}}</p>
+                                        <div class="row">
+                                            {% for field in form %}
+                                                {% if field.errors %}
+                                                    {% for error in field.errors %}
+                                                        <p style="color: red">{{ error }}</p>
+                                                    {% endfor %}
+                                                {% endif %}
+                                            {% endfor %}
+                                            <p style="color: red">
+                                                {{ form.non_field_errors }}</p>
 
-										<div class="row">
-											<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-												<div class="field-holder">
-													<div class="payment-holder">
-														<input type="submit" value="Register"
-															id="btn-next-restaurant-information"
-															class="btn btn-danger" />
-													</div>
-												</div>
-											</div>
-										</div>
-										<div class="row">
-											<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-												{% include "includes/alerts.html" %}
-											</div>
-										</div>
-									</div>
-								</form>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
-<!-- Main Section End -->
+                                            <div class="row">
+                                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                    <div class="field-holder">
+                                                        <div class="payment-holder">
+                                                            <input type="submit" value="Register"
+                                                                   id="btn-next-restaurant-information"
+                                                                   class="btn btn-danger"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                    {% include "includes/alerts.html" %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Main Section End -->
 {% endblock %}

@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block content %}
+    {% include 'includes/alerts.html' %}
     <!-- Main Section Start -->
     <div class="main-section border-top">
         <div style="
@@ -21,9 +23,121 @@
                     <div class="col-9">
                         <div class="card">
                             <div class="card-header">
-                                <span class="fw-bold">VENDOR PROFILE</span>
+                                <span class="fw-bold">QUẢN LÝ THÔNG TIN NHÀ HÀNG </span>
                             </div>
+                            <div class="card-body">
+                                <form action="{% url 'vendorProfile' %}" method="post" enctype="multipart/form-data">
+                                    {% csrf_token %}
+                                    <div class="d-flex mb-3 align-items-center">
+                                        <img style="width: 100px" src="{{ profile.profile_picture.url }}" alt="Logo"
+                                             class="rounded border border-2">
+                                        <div class="w-100 ms-3">
+                                            <label for="logoFile" class="form-label fw-bold">Cập nhật Logo</label>
+                                            {{ profile_form.profile_picture }}
+                                        </div>
+                                    </div>
+                                    <span class="text-danger text-center">{{ profile_form.profile_picture.errors }}</span>
+                                    <hr>
+                                    <div class="d-flex mb-3 align-items-center">
+                                        <img style="width: 100px; " src="{{ profile.cover_photo.url }}"
+                                             alt="Cover Photo"
+                                             class="rounded border border-2">
+                                        <div class="w-100 ms-3">
+                                            <label for="coverFile" class="form-label fw-bold">Cập nhật Cover
+                                                Photo</label>
+                                            {{ profile_form.cover_photo }}
+                                        </div>
+                                    </div>
+                                    <span class="text-danger text-center">{{ profile_form.cover_photo.errors }}</span>
+                                    <hr>
+                                    <div class="d-flex mb-3 align-items-center">
+                                        <img style="width: 100px" src="{{ vendor.vendor_license.url }}" alt=""
+                                             class="rounded border border-2">
+                                        <div class="w-100 ms-3">
+                                            <label for="licenseFile" class="form-label fw-bold">Cập nhật Chứng
+                                                nhận</label>
+                                            {{ vendor_form.vendor_license }}
+                                        </div>
+                                    </div>
+                                    <span class="text-danger text-center">{{ vendor_form.vendor_license.errors }}</span>
+                                    <hr>
+                                    <div class="d-flex mb-3 align-items-center">
+                                        <div class="field-holder w-100">
+                                            <label for="vendor_name" class="form-label fw-bold">Tên Nhà Hàng</label>
+                                            {{ vendor_form.vendor_name }}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="d-flex mb-3 align-items-center">
+                                            <div class="field-holder w-100">
+                                                <label for="vendor_name" class="form-label fw-bold">Địa Chỉ </label>
+                                                {{ profile_form.address }}
+                                                <small class="text-muted float-end mt-2">power by Google</small>
+                                            </div>
 
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12 col-md-6">
+                                            <div class="d-flex mb-3 align-items-center">
+                                                <div class="field-holder w-100">
+                                                    <label for="vendor_name" class="form-label fw-bold">Quốc Gia</label>
+                                                    {{ profile_form.country }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-md-6">
+                                            <div class="d-flex mb-3 align-items-center">
+                                                <div class="field-holder w-100">
+                                                    <label for="vendor_name" class="form-label fw-bold">Bang</label>
+                                                    {{ profile_form.state }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12 col-md-6">
+                                            <div class="d-flex mb-3 align-items-center">
+                                                <div class="field-holder w-100">
+                                                    <label for="vendor_name" class="form-label fw-bold">Thành
+                                                        Phố</label>
+                                                    {{ profile_form.city }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-md-6">
+                                            <div class="d-flex mb-3 align-items-center">
+                                                <div class="field-holder w-100">
+                                                    <label for="vendor_name" class="form-label fw-bold">Mã Vùng</label>
+                                                    {{ profile_form.pin_code }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12 col-md-6">
+                                            <div class="d-flex mb-3 align-items-center">
+                                                <div class="field-holder w-100">
+                                                    <label for="vendor_name" class="form-label fw-bold">Kinh Độ</label>
+                                                    {{ profile_form.latitude }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-md-6">
+                                            <div class="d-flex mb-3 align-items-center">
+                                                <div class="field-holder w-100">
+                                                    <label for="vendor_name" class="form-label fw-bold">Vĩ Độ</label>
+                                                    {{ profile_form.longitude }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="d-flex align-items-center">
+                                        <input type="submit" class="btn btn-primary" value="Cập nhật"/>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>

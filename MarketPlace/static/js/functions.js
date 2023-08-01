@@ -38,7 +38,7 @@ jQuery(document).ready(function () {
     /*Location Menu Function End*/
 
     /*Fitvideo Script*/
-    
+
     var swiper = new Swiper('.testimonial.fancy .swiper-container', {
         pagination: '.swiper-pagination',
         paginationClickable: true,
@@ -91,6 +91,7 @@ jQuery(document).ready(function () {
             }
         }
     });
+
     /*
      * wordpres default pagination
      */
@@ -213,10 +214,10 @@ jQuery(document).ready(function () {
                 }
 
 
-
             });
         }
     }
+
     StickyHeader();
     $(window).resize(function () {
         StickyHeader();
@@ -522,7 +523,6 @@ function foodbakery_post_likes_count(admin_url, id, obj) {
 }
 
 
-
 function foodbakery_show_response_theme(loader_data, loading_element) {
 
     jQuery(".foodbakery_loader").hide();
@@ -551,6 +551,7 @@ function foodbakery_show_response_theme(loader_data, loading_element) {
     }
     jQuery("#message22").remove();
 }
+
 jQuery(document).ready(function ($) {
     if (jQuery(".foodbakery-fancy-menu li.current-menu-parent a").length > 0) {
         jQuery(".foodbakery-fancy-menu li.current-menu-parent a").click();

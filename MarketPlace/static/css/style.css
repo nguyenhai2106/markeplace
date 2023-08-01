@@ -1,74 +1,88 @@
 * {
-  box-sizing: border-box;
+    box-sizing: border-box;
 }
+
 .field-holder input[type="text"],
 .field-holder input[type="password"] {
-  border-radius: 4px;
-  height: 41px;
-  line-height: 41px;
-  color: #9097a1;
-  font-size: 12px;
-  background-color: #fdfdfd;
-  padding: 0 15px;
-  width: 100%;
-  border: 1px solid #eceef4;
-  font-family: "Open Sans", sans-serif;
-  font-weight: 400;
+    border-radius: 4px;
+    height: 41px;
+    line-height: 41px;
+    color: #9097a1;
+    font-size: 12px;
+    background-color: #fdfdfd;
+    padding: 0 15px;
+    width: 100%;
+    border: 1px solid #eceef4;
+    font-family: "Open Sans", sans-serif;
+    font-weight: 400;
 }
 
 input[type="file"] {
-  width: 100%;
-  color: #444;
-  padding: 5px;
-  background: #fff;
-  border: 1px solid #eceef4;
-  border-radius: 4px;
+    width: 100%;
+    color: #444;
+    padding: 5px;
+    background: #fff;
+    border: 1px solid #eceef4;
+    border-radius: 4px;
 }
 
 input[type="file"]::file-selector-button {
-  margin-right: 20px;
-  border: 1px solid #eceef4;
-  padding: 2px 10px;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background 0.2s ease-in-out;
+    margin-right: 20px;
+    border: 1px solid #eceef4;
+    padding: 2px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.2s ease-in-out;
 }
 
 input:focus {
-  outline: none;
+    outline: none;
 }
 
 @keyframes show-toast {
-  0% {
-    left: -100%;
-  }
-  20% {
-    left: 20px;
-  }
-  80% {
-    left: 20px;
-  }
-  100% {
-    left: -100%;
-  }
+    0% {
+        left: -100%;
+    }
+    20% {
+        left: 20px;
+    }
+    80% {
+        left: 20px;
+    }
+    100% {
+        left: -100%;
+    }
 }
 
 .show-notification {
-  position: absolute;
-  bottom: 5px;
-  left: 100%;
-  animation-name: show-toast;
-  animation-duration: 3s;
-  z-index: 99;
+    position: absolute;
+    bottom: 5px;
+    left: 100%;
+    animation-name: show-toast;
+    animation-duration: 3s;
+    z-index: 99;
 }
 
 body {
-  /* zoom: 80%; */
+    /* zoom: 80%; */
 }
+
 .profile-picture {
-  width: 80px;
-  height: auto;
-  border-radius: 8px;
-  margin-right: 8px;
-  border: solid 2px whitesmoke;
+    width: 80px;
+    height: auto;
+    border-radius: 8px;
+    margin-right: 8px;
+    border: solid 2px whitesmoke;
+}
+
+li {
+    list-style: none;
+}
+
+ul {
+    padding-left: 0;
+}
+
+input[type="file"] {
+    padding: 0px;
 }
