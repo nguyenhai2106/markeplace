@@ -22,11 +22,13 @@
         </li>
         <li class="list-group-item">
             <a href="{% url 'vendorProfile' %}"
-               class="text-secondary {% if '/vendor/profile/' == request.path %}text-danger{% endif %}"><i
+               class="text-secondary {% if 'profile' in request.path %}text-danger{% endif %}"><i
                     class="fa-solid fa-utensils"></i>&nbsp;&nbsp;&nbsp;&nbsp;MY
                 RESTAURANT</a></li>
         <li class="list-group-item">
-            <a href="{% url 'vendorProfile' %}" class="text-secondary"><i class="fa-solid fa-bars"></i>&nbsp;&nbsp;&nbsp;&nbsp;MENU
+            <a href="{% url 'menu_builder' %}"
+               class="text-secondary {% if 'menu-builder' in request.path %}text-danger{% endif %}"><i
+                    class="fa-solid fa-bars"></i>&nbsp;&nbsp;&nbsp;&nbsp;MENU
                 BUILDER</a></li>
         <li class="list-group-item"><a href="{% url 'vendorDashboard' %}" class="text-secondary"><i
                 class="fa-solid fa-cart-shopping"></i>&nbsp;&nbsp;&nbsp;&nbsp;ORDERS</a>

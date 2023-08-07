@@ -12,7 +12,12 @@ from vendor.models import Vendor
 
 
 # Create your views here.
-# Preventing a vendor from accessing the customer's page  
+def get_vendor(request):
+    vendor = Vendor.objects.get(user=request.user)
+    return vendor
+
+
+# Preventing a vendor from accessing the customer's page
 def check_role_vendor(user):
     if user.role == 1:
         return True

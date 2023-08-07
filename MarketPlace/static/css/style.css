@@ -86,3 +86,17 @@ ul {
 input[type="file"] {
     padding: 0px;
 }
+
+textarea {
+    width: 100%;
+    color: #444;
+    padding: 5px;
+    background: #fff;
+    border: 1px solid #eceef4;
+    border-radius: 4px;
+    padding: 16px;
+}
+
+textarea:focus {
+    outline: none;
+}

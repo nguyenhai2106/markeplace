@@ -9,9 +9,16 @@ from accounts.models import UserProfile
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 from accounts.utils import send_verification_email
+from menu.models import Category, FoodItem
+from menu.forms import CategoryForm
 
 
 # Create your views here.
+def get_vendor(request):
+    vendor = Vendor.objects.get(user=request.user)
+    return vendor
+
+
 def registerVendor(request):
     if request.user.is_authenticated:
         messages.warning(request, "You are already logged in")
@@ -101,3 +108,74 @@ def vendor_profile(request):
     }
 
     return render(request, 'vendor/vendor_profile.html', context)
+
+
+def menu_builder(request):
+    vendor = get_vendor(request)
+    categories = Category.objects.filter(vendor=vendor).order_by('created_at')
+    context = {
+        'categories': categories
+    }
+    return render(request, 'vendor/menu_builder.html', context)
+
+
+def food_items_by_category(request, pk=None):
+    vendor = get_vendor(request)
+    category = get_object_or_404(Category, pk=pk)
+    food_items = FoodItem.objects.filter(vendor=vendor, category=category)
+    context = {
+        'food_items': food_items,
+        'category': category
+    }
+    return render(request, 'vendor/food_items_by_category.html', context)
+
+
+@login_required(login_url='login')
+@user_passes_test(check_role_vendor)
+def add_category(request):
+    if request.method == 'POST':
+        form = CategoryForm(request.POST)
+        if form.is_valid():
+            category = form.save(commit=False)
+            category.vendor = get_vendor(request)
+            form.save()
+            messages.success(request, "Thêm danh mục thành công")
+            return redirect('menu_builder')
+        else:
+            print("DEBUGS:", form.errors)
+    else:
+        form = CategoryForm()
+    context = {
+        'form': form
+    }
+    return render(request, 'vendor/add_category.html', context)
+
+
+@login_required(login_url='login')
+@user_passes_test(check_role_vendor)
+def edit_category(request, pk=None):
+    category = get_object_or_404(Category, pk=pk)
+    if request.method == 'POST':
+        form = CategoryForm(request.POST, instance=category)
+        if form.is_valid():
+            category = form.save(commit=False)
+            category.vendor = get_vendor(request)
+            form.save()
+            messages.success(request, "Cập nhật danh mục thành công")
+            return redirect('menu_builder')
+        else:
+            print("DEBUGS:", form.errors)
+    else:
+        form = CategoryForm(instance=category)
+    context = {
+        'form': form,
+        'category': category
+    }
+    return render(request, 'vendor/edit_category.html', context)
+
+
+def delete_category(request, pk=None):
+    category = get_object_or_404(Category, pk=pk)
+    category.delete()
+    messages.warning(request, f"Danh mục '{category.category_name}' đã bị xóa")
+    return redirect('menu_builder')
