@@ -6,8 +6,8 @@ from tabnanny import verbose
 # Create your models here.
 class Category(models.Model):
     vendor = models.ForeignKey(Vendor, on_delete=models.CASCADE)
-    category_name = models.CharField(max_length=64, unique=True)
-    slug = models.SlugField(max_length=128, unique=True)
+    category_name = models.CharField(max_length=64)
+    slug = models.SlugField(max_length=128)
     description = models.TextField(max_length=256, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -15,6 +15,7 @@ class Category(models.Model):
     class Meta:
         verbose_name = 'category'
         verbose_name_plural = 'categories'
+        unique_together = ('vendor', 'category_name', 'slug')
 
     def clean(self):
         self.category_name = self.category_name.capitalize()

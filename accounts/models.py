@@ -104,4 +104,6 @@ class UserProfile(models.Model):
         return self.user.email
 
     def full_address(self):
+        if not self.address:
+            return "Vui lòng cập nhật địa chỉ cửa hàng!"
         return f'{self.address}, {self.city}, {self.state}, {self.country}'

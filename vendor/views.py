@@ -1,4 +1,6 @@
 from django.contrib.auth.decorators import login_required, user_passes_test
+from django.db import IntegrityError
+from django.http import QueryDict
 from django.shortcuts import render, redirect, get_object_or_404
 from accounts.forms import UserForm, UserProfileForm
 from accounts.views import check_role_vendor
@@ -10,7 +12,7 @@ from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 from accounts.utils import send_verification_email
 from menu.models import Category, FoodItem
-from menu.forms import CategoryForm
+from menu.forms import CategoryForm, FoodItemForm
 
 
 # Create your views here.
@@ -48,7 +50,9 @@ def registerVendor(request):
                 messages.success(request,
                                  "Your restaurant has been registered successfully. Please wait for the approval.")
                 # Send verification email
-                send_verification_email(request, user)
+                mail_subject = 'Please active your account'
+                email_template = 'accounts/emails/account_verification_email.html'
+                send_verification_email(request, user, mail_subject, email_template)
                 return redirect("login")
             except ObjectDoesNotExist:
                 messages.error(request, "UserProfile not found for the user.")
@@ -136,11 +140,16 @@ def add_category(request):
     if request.method == 'POST':
         form = CategoryForm(request.POST)
         if form.is_valid():
-            category = form.save(commit=False)
-            category.vendor = get_vendor(request)
-            form.save()
-            messages.success(request, "Thêm danh mục thành công")
-            return redirect('menu_builder')
+            try:
+                category = form.save(commit=False)
+                category.vendor = get_vendor(request)
+                category.save()
+                messages.success(request, "Thêm danh mục thành công")
+                return redirect('menu_builder')
+            except IntegrityError as e:
+                print("DEBUGS")
+                messages.error(request, "Danh mục này đã tồn tại!")
+                return redirect('add_category')
         else:
             print("DEBUGS:", form.errors)
     else:
@@ -160,7 +169,7 @@ def edit_category(request, pk=None):
         if form.is_valid():
             category = form.save(commit=False)
             category.vendor = get_vendor(request)
-            form.save()
+            category.save()
             messages.success(request, "Cập nhật danh mục thành công")
             return redirect('menu_builder')
         else:
@@ -174,8 +183,63 @@ def edit_category(request, pk=None):
     return render(request, 'vendor/edit_category.html', context)
 
 
+@login_required(login_url='login')
+@user_passes_test(check_role_vendor)
 def delete_category(request, pk=None):
     category = get_object_or_404(Category, pk=pk)
     category.delete()
-    messages.warning(request, f"Danh mục '{category.category_name}' đã bị xóa")
+    messages.warning(request, f"Danh mục '{category}' đã bị xóa")
     return redirect('menu_builder')
+
+
+@login_required(login_url='login')
+@user_passes_test(check_role_vendor)
+def add_food(request):
+    if request.method == 'POST':
+        form = FoodItemForm(request.POST, request.FILES)
+        if form.is_valid():
+            food_item = form.save(commit=False)
+            food_item.vendor = get_vendor(request)
+            food_item.save()
+            messages.success(request, "Thêm món ăn thành công")
+            return redirect('food_items_by_category', food_item.category.id)
+        else:
+            print("DEBUGS:", form.errors)
+    else:
+        form = FoodItemForm()
+        form.fields['category'].queryset = Category.objects.filter(vendor=get_vendor(request))
+    context = {
+        'form': form
+    }
+    return render(request, 'vendor/add_food.html', context)
+
+
+@login_required(login_url='login')
+@user_passes_test(check_role_vendor)
+def edit_food(request, pk=None):
+    food_item = get_object_or_404(FoodItem, pk=pk)
+    if request.method == 'POST':
+        form = FoodItemForm(request.POST, request.FILES, instance=food_item)
+        if form.is_valid():
+            food_item = form.save(commit=False)
+            food_item.vendor = get_vendor(request)
+            form.save()
+            messages.success(request, "Cập nhật món ăn thành công")
+            return redirect('food_items_by_category', food_item.category.id)
+        else:
+            print("DEBUGS:", form.errors)
+    else:
+        form = FoodItemForm(instance=food_item)
+        form.fields['category'].queryset = Category.objects.filter(vendor=get_vendor(request))
+    context = {
+        'form': form,
+        'food_item': food_item
+    }
+    return render(request, 'vendor/edit_food.html', context)
+
+
+def delete_food(request, pk=None):
+    food_item = get_object_or_404(FoodItem, pk=pk)
+    food_item.delete()
+    messages.warning(request, f"Món ăn '{food_item.food_title}' đã bị xóa")
+    return redirect('food_items_by_category', food_item.category.id)

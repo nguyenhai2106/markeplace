@@ -11,9 +11,9 @@
                     <img src="{% static 'images/default-profile.png' %}" alt="" class="profile-picture">
                     {% endif %}
                 </div>
-                <div class="text-white">
+                <div class="text-white d-flex flex-column justify-content-center">
                     <h4 class="text-center" style="margin-bottom: 0">{{ vendor.vendor_name }}</h4>
-                    <p class="text-center"><i class="fa-solid fa-location-dot"></i>
+                    <p class="text-center mt-1 mb-0"><i class="fa-solid fa-location-dot"></i>
                         {{ vendor.user_profile.full_address }}
                     </p>
 

@@ -30,8 +30,9 @@
                                 <div class="d-flex align-items-center justify-content-between">
                                     <h5>Danh Mục: <span class="text-success">{{ category }}</span></h5>
                                     <div class="btn-group mb-3 float-end">
-                                        <a href="#" class="btn btn-success" aria-current="page" onclick="history.back()">Thêm Danh Mục</a>
-                                        <a href="#" class="btn btn-primary">Thêm Món Ăn</a>
+                                        <a href="#" class="btn btn-success" aria-current="page"
+                                           onclick="history.back()">Thêm Danh Mục</a>
+                                        <a href="{% url 'add_food' %}" class="btn btn-primary">Thêm Món Ăn</a>
                                     </div>
                                 </div>
                                 {% if food_items %}
@@ -40,7 +41,8 @@
                                         <tr>
                                             <th scope="col" class="text-center" width="5%">STT</th>
                                             <th scope="col" class="text-center" width="15%">Hình Ảnh</th>
-                                            <th scope="col" class="text-center" width="60%">Tên Món</th>
+                                            <th scope="col" class="text-center" width="45%">Tên Món</th>
+                                            <th scope="col" class="text-center" width="15%">Tình Trạng</th>
                                             <th scope="col" class="text-center">Thao tác</th>
                                         </tr>
                                         </thead>
@@ -51,13 +53,25 @@
                                                 <td class="text-center align-middle">
                                                     <img width="75%" src="{{ food_item.image.url }}"/></td>
                                                 <td class="text-start align-middle w-50">
-                                                    <a href="#" class="fw-bold">{{ food_item }}</a>
+                                                    <a href="{% url 'edit_food' food_item.id %}"
+                                                       class="fw-bold">{{ food_item }}</a>
                                                     <p style="max-height: 3.2em; overflow: hidden; margin-bottom: 0">{{ food_item.description }}</p>
                                                 </td>
                                                 <td class="text-center align-middle">
-                                                    <a href="#" class="btn btn-outline-primary"><i
+                                                    {% if food_item.is_available %}
+                                                        <span class="badge text-bg-success align-middle">Sẵn Có</span>
+                                                    {% else %}
+                                                        <span class="badge text-bg-danger align-middle">Hết Hàng</span>
+
+                                                    {% endif %}
+                                                </td>
+                                                <td class="text-center align-middle">
+                                                    <a href="{% url 'edit_food' food_item.id %}"
+                                                       class="btn btn-outline-primary"><i
                                                             class="fa-solid fa-pen-to-square"></i></a>
-                                                    <a href="#" class="btn btn-outline-danger"><i
+                                                    <a href="{% url 'delete_food' food_item.id %}"
+                                                       onclick="return confirm('Bạn chắc chắn muốn xóa món ăn này?')"
+                                                       class="btn btn-outline-danger"><i
                                                             class="fa-solid fa-trash"></i></a>
                                                 </td>
                                             </tr>

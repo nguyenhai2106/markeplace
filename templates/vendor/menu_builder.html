@@ -27,41 +27,47 @@
                             </div>
                             <div class="card-body">
                                 <h5>Danh Mục Món Ăn</h5>
-                                <div class="btn-group mb-3 float-end">
-                                    <a href="{% url 'add_category' %}" class="btn btn-success" aria-current="page">Thêm
-                                        Danh Mục</a>
-                                    <a href="#" class="btn btn-primary">Thêm Món Ăn</a>
+                                <div class="d-flex justify-content-end">
+                                    <div class="btn-group mb-3">
+                                        <a href="{% url 'add_category' %}" class="btn btn-success" aria-current="page">Thêm
+                                            Danh Mục</a>
+                                        <a href="{% url 'add_food' %}" class="btn btn-primary">Thêm Món Ăn</a>
+                                    </div>
                                 </div>
-                                <table class="table table-hover mb-0">
-                                    <thead class="table-dark">
-                                    <tr>
-                                        <th scope="col" class="text-center" width="5%">STT</th>
-                                        <th scope="col" class="text-center" width="75%">Danh Mục</th>
-                                        <th scope="col" class="text-center">Thao tác</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    {% for category in categories %}
+                                {% if categories %}
+                                    <table class="table table-hover mb-0">
+                                        <thead class="table-dark">
                                         <tr>
-                                            <td class="text-center align-middle">{{ forloop.counter }}</td>
-                                            <td class="text-start align-middle w-50">
-                                                <a href="{% url 'food_items_by_category' category.id %}"
-                                                   class="fw-bold">{{ category }}</a>
-                                                <p style="max-height: 3.2em; overflow: hidden; margin-bottom: 0">{{ category.description }}</p>
-                                            </td>
-                                            <td class="text-center align-middle">
-                                                <a href="{% url 'edit_category' category.id %}"
-                                                   class="btn btn-outline-primary"><i
-                                                        class="fa-solid fa-pen-to-square"></i></a>
-                                                <a href="{% url 'delete_category' category.id %}"
-                                                   onclick="return confirm('Bạn chắc chắn muốn xóa danh mục này?')"
-                                                   class="btn btn-outline-danger"><i
-                                                        class="fa-solid fa-trash"></i></a>
-                                            </td>
+                                            <th scope="col" class="text-center" width="5%">STT</th>
+                                            <th scope="col" class="text-center" width="75%">Danh Mục</th>
+                                            <th scope="col" class="text-center">Thao tác</th>
                                         </tr>
-                                    {% endfor %}
-                                    </tbody>
-                                </table>
+                                        </thead>
+                                        <tbody>
+                                        {% for category in categories %}
+                                            <tr>
+                                                <td class="text-center align-middle">{{ forloop.counter }}</td>
+                                                <td class="text-start align-middle w-50">
+                                                    <a href="{% url 'food_items_by_category' category.id %}"
+                                                       class="fw-bold text-capitalize">{{ category }}</a>
+                                                    <p style="max-height: 3.2em; overflow: hidden; margin-bottom: 0">{{ category.description }}</p>
+                                                </td>
+                                                <td class="text-center align-middle">
+                                                    <a href="{% url 'edit_category' category.id %}"
+                                                       class="btn btn-outline-primary"><i
+                                                            class="fa-solid fa-pen-to-square"></i></a>
+                                                    <a href="{% url 'delete_category' category.id %}"
+                                                       onclick="return confirm('Bạn chắc chắn muốn xóa danh mục này?')"
+                                                       class="btn btn-outline-danger"><i
+                                                            class="fa-solid fa-trash"></i></a>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                {% else %}
+                                    <h5 class="text-primary text-center mb-0">Hiện tại không có danh mục nào</h5>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
