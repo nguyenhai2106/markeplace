@@ -2,6 +2,7 @@
 {% load static %}
 {% block content %}
     <div class="container-fluid border-top p-4">
+        {% include 'includes/search.html' %}
         <div class="container mt-1 mb-4 d-flex align-items-center"
              style="height: 160px; background: url({% if vendor.user_profile.cover_photo %} {{ vendor.user_profile.cover_photo.url }} {% else %} {% static 'images/default-cover.png' %}{% endif %}) no-repeat 0 0 / cover; filter: brightness(90%);">
             <div class="col-12">

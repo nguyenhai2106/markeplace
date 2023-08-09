@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, get_object_or_404
-from django.db.models import Prefetch
+from django.db.models import Prefetch, Q
 
 from market.context_processors import get_cart_counter, get_cart_amounts
 from vendor.models import Vendor
@@ -176,3 +176,18 @@ def delete_cart_item(request, cart_item_id):
                 'status': 'Failed',
                 'message': "Yêu cầu không hợp lệ!"
             })
+
+
+def search(request):
+    keyword = request.GET['restaurant_name']
+    fetch_vendors_by_fooditems = FoodItem.objects.filter(food_title__icontains=keyword, is_available=True).values_list(
+        'vendor', flat=True)
+
+    vendors = Vendor.objects.filter(Q(id__in=fetch_vendors_by_fooditems) | Q(is_approved=True, user__is_active=True,
+                                                                             vendor_name__icontains=keyword))
+    vendor_count = vendors.count()
+    context = {
+        'vendors': vendors,
+        'vendor_count': vendor_count
+    }
+    return render(request, 'market/listings.html', context)

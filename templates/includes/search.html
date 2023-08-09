@@ -1,13 +1,15 @@
 {% load static %}
-<div class="container">
+<div class="container my-4">
     <div class="row">
-        <form>
+        <form action="{% url 'search' %}" method="get">
             <div class="input-group mb-3 col-6 w-75 mx-auto">
-                <input type="text" class="form-control border-end-0" placeholder="Tên cửa hàng . . ."
+                <input name="restaurant_name" type="text" class="form-control border-end-0"
+                       placeholder="Tên cửa hàng . . ."
                        aria-label="restaurant_name" aria-describedby="button-addon2">
-                <input type="text" class="form-control" placeholder="Địa chỉ . . ." aria-label="address">
-                <button class="btn btn-primary" type="button" id="button-addon2">Tìm Kiếm</button>
+                <button class="btn btn-primary" type="submit" id="button-addon2">Tìm Kiếm</button>
             </div>
         </form>
     </div>
 </div>
+
+<!-- <input type="text" class="form-control" placeholder="Địa chỉ . . ." aria-label="address"> -->
