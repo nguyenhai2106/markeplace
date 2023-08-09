@@ -1,0 +1,172 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    {% include 'includes/alerts.html' %}
+    <!-- Main Section Start -->
+    <div class="main-section border-top">
+        <div style="
+      margin-top: 0px;
+      padding-top: 20px;
+      padding-bottom: 60px;
+      margin-bottom: 0px;
+	 width: 90%;
+	 margin: auto;
+    ">
+            <div class="container">
+                {% include 'customers/cover.html' %}
+            </div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-3">
+                        {% include 'includes/customer_sidebar.html' %}
+                    </div>
+                    <div class="col-9">
+                        <div class="card">
+                            <div class="card-header">
+                                <span class="fw-bold">Quản Lý Thông Tin Cá Nhân</span>
+                            </div>
+                            <div class="card-body">
+                                <form action="{% url 'customer_profile' %}" method="post" enctype="multipart/form-data">
+                                    {% csrf_token %}
+                                    <div class="d-flex mb-3 align-items-center">
+                                        {% if profile.profile_picture %}
+                                            <img style="width: 100px" class="thumbnail rounded border border-2"
+                                                 src="{{ profile.profile_picture.url }}"
+                                                 alt="Profile Picture">
+                                        {% else %}
+                                            <img style="width: 100px" class="thumbnail rounded border border-2"
+                                                 src="{% static 'images/default-profile.png' %}"
+                                                 alt="Profile Picture">
+                                        {% endif %}
+                                        <div class="w-100 ms-3">
+                                            <label for="logoFile" class="form-label fw-bold">Cập nhật Ảnh Đại
+                                                Diện</label>
+                                            {{ profile_form.profile_picture }}
+                                        </div>
+                                    </div>
+                                    <span class="text-danger text-center">{{ profile_form.profile_picture.errors }}</span>
+                                    <hr>
+                                    <div class="d-flex mb-3 align-items-center">
+                                        {% if profile.cover_photo %}
+                                            <img style="width: 100px" class="thumbnail rounded border border-2"
+                                                 src="{{ profile.cover_photo.url }}"
+                                                 alt="Profile Picture">
+                                        {% else %}
+                                            <img style="width: 100px" class="thumbnail rounded border border-2"
+                                                 src="{% static 'images/default-profile.png' %}"
+                                                 alt="Profile Picture">
+                                        {% endif %}
+                                        <div class="w-100 ms-3">
+                                            <label for="coverFile" class="form-label fw-bold">Cập nhật Ảnh Nền</label>
+                                            {{ profile_form.cover_photo }}
+                                        </div>
+                                    </div>
+                                    <span class="text-danger text-center">{{ profile_form.cover_photo.errors }}</span>
+                                    <hr>
+                                    <div class="row">
+                                        <div class="col-12 col-md-6">
+                                            <div class="d-flex mb-3 align-items-center">
+                                                <div class="field-holder w-100">
+                                                    <label for="first_name" class="form-label fw-bold">Họ</label>
+                                                    {{ user_form.first_name }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-md-6">
+                                            <div class="d-flex mb-3 align-items-center">
+                                                <div class="field-holder w-100">
+                                                    <label for="last_name" class="form-label fw-bold">Tên</label>
+                                                    {{ user_form.last_name }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-12 col-md-6">
+                                            <div class="d-flex mb-3 align-items-center">
+                                                <div class="field-holder w-100">
+                                                    <label for="address" class="form-label fw-bold">Địa Chỉ</label>
+                                                    {{ profile_form.address }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-md-6">
+                                            <div class="d-flex mb-3 align-items-center">
+                                                <div class="field-holder w-100">
+                                                    <label for="phone_number" class="form-label fw-bold">Số điện
+                                                        thoại</label>
+                                                    {{ user_form.phone_number }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12 col-md-6">
+                                            <div class="d-flex mb-3 align-items-center">
+                                                <div class="field-holder w-100">
+                                                    <label for="country" class="form-label fw-bold">Quốc Gia</label>
+                                                    {{ profile_form.country }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-md-6">
+                                            <div class="d-flex mb-3 align-items-center">
+                                                <div class="field-holder w-100">
+                                                    <label for="state" class="form-label fw-bold">Bang</label>
+                                                    {{ profile_form.state }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12 col-md-6">
+                                            <div class="d-flex mb-3 align-items-center">
+                                                <div class="field-holder w-100">
+                                                    <label for="city" class="form-label fw-bold">Thành
+                                                        Phố</label>
+                                                    {{ profile_form.city }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-md-6">
+                                            <div class="d-flex mb-3 align-items-center">
+                                                <div class="field-holder w-100">
+                                                    <label for="pin_code" class="form-label fw-bold">Mã Vùng</label>
+                                                    {{ profile_form.pin_code }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12 col-md-6">
+                                            <div class="d-flex mb-3 align-items-center">
+                                                <div class="field-holder w-100">
+                                                    <label for="latitude" class="form-label fw-bold">Kinh Độ</label>
+                                                    {{ profile_form.latitude }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-md-6">
+                                            <div class="d-flex mb-3 align-items-center">
+                                                <div class="field-holder w-100">
+                                                    <label for="longitude" class="form-label fw-bold">Vĩ Độ</label>
+                                                    {{ profile_form.longitude }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="d-flex align-items-center">
+                                        <input type="submit" class="btn btn-primary" value="Cập nhật"/>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Main Section End -->
+{% endblock %}

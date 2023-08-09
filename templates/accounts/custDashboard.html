@@ -12,22 +12,7 @@
 	 width: 90%;
 	 margin: auto;
     ">
-            <div class="container">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="user-dashboard loader-holder">
-                            <div class="user-holder">
-                                <h4 class="text-center" style="margin-bottom: 0">ACCOUNT DASHBOARD</h4>
-                                <hr/>
-                                <div id="restaurant-sets-holder">
-                                    <p>Welcome, {{ user.username }}</p>
-                                    <p>This is a {{ user.get_role }}</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            {% include 'customers/cover.html' %}
             <div class="container">
                 <div class="row">
                     <div class="col-3">
