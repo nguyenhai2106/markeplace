@@ -70,7 +70,7 @@ def registerUser(request):
 
 def login(request):
     if request.user.is_authenticated:
-        messages.warning(request, "You are already logged in")
+        messages.warning(request, "Bạn đã đăng nhập trước đó")
         return redirect("myAccount")
     elif request.method == "POST":
         email = request.POST['email']
@@ -78,17 +78,17 @@ def login(request):
         user = auth.authenticate(email=email, password=password)
         if user is not None:
             auth.login(request, user)
-            messages.success(request, "You are now logged in")
+            messages.success(request, "Bạn đã đăng nhập thành công")
             return redirect('myAccount')
         else:
-            messages.error(request, "Invalid login credentials")
+            messages.error(request, "Đăng nhập không hợp lệ")
             return redirect('login')
     return render(request, 'accounts/login.html')
 
 
 def logout(request):
     auth.logout(request)
-    messages.info(request, 'You are logged out')
+    messages.info(request, 'Tài khoản của bạn đã được đăng xuất')
     return redirect('login')
 
 

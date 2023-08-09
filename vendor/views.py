@@ -24,7 +24,7 @@ def get_vendor(request):
 def registerVendor(request):
     if request.user.is_authenticated:
         messages.warning(request, "You are already logged in")
-        return redirect("dashboard")
+        return redirect("myAccount")
     elif request.method == 'POST':
         user_form = UserForm(request.POST)
         vendor_form = VendorForm(request.POST, request.FILES)
@@ -47,10 +47,9 @@ def registerVendor(request):
                 user_profile = UserProfile.objects.get(user=user)
                 vendor.user_profile = user_profile
                 vendor.save()
-                messages.success(request,
-                                 "Your restaurant has been registered successfully. Please wait for the approval.")
+                messages.success(request, 'Nhà hàng của bạn đã đăng ký thành công. Vui lòng chờ để được phê duyệt.')
                 # Send verification email
-                mail_subject = 'Please active your account'
+                mail_subject = 'Vui lòng kích hoạt tài khoản của bạn'
                 email_template = 'accounts/emails/account_verification_email.html'
                 send_verification_email(request, user, mail_subject, email_template)
                 return redirect("login")

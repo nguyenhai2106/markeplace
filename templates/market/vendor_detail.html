@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <div class="container-fluid border-top p-4">
+        <div class="container mt-1 mb-4 d-flex align-items-center"
+             style="height: 160px; background: url({% if vendor.user_profile.cover_photo %} {{ vendor.user_profile.cover_photo.url }} {% else %} {% static 'images/default-cover.png' %}{% endif %}) no-repeat 0 0 / cover; filter: brightness(90%);">
+            <div class="col-12">
+                <div class="user-dashboard loader-holder d-flex justify-content-between px-5">
+                    <div class="user-holder d-flex justify-content-center align-items-center">
+                        <div>
+                            {% if vendor.user_profile.profile_picture %}
+                                <img src="{{ vendor.user_profile.profile_picture.url }}" alt="" class="profile-picture">
+                            {% else %}
+                                <img src="{% static 'images/default-profile.png' %}" alt="" class="profile-picture">
+                            {% endif %}
+                        </div>
+                        <div class="text-white d-flex flex-column justify-content-center">
+                            <h4 class="text-center" style="margin-bottom: 0">{{ vendor.vendor_name }}</h4>
+                            <p class="text-center mt-1 mb-0"><i class="fa-solid fa-location-dot"></i>
+                                {{ vendor.user_profile.full_address }}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="text-white d-flex flex-column justify-content-center">
+                        <h4 class="text-center" style="margin-bottom: 0">Giờ mở cửa: 08:00 - 22:00</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% include 'includes/search.html' %}
+        <div class="container">
+            <div class="row">
+                <div class="col-3">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between">
+                            <span class="fw-bold"><i class="bi bi-bookmarks-fill"></i> Danh Mục</span>
+                            <span>
+                                <a class="text-decoration-none"
+                                   href="{% url 'vendor_detail' vendor_slug=vendor.vendor_slug category_slug='all' %}">Tất Cả</a>
+                            </span>
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            {% for category in category_list %}
+                                <li class="list-group-item ">
+                                    <a href="{% url 'vendor_detail' vendor_slug=vendor.vendor_slug category_slug=category.slug %}"
+                                       class="text-decoration-none text-secondary {% if category.slug in request.path %}text-danger fw-bold{% endif %}">{{ category }}</a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-9">
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="fw-bold">Danh Sách Món Ăn</span>
+                        </div>
+                        <div class="card-body">
+                            {% for category in categories %}
+                                <div class="card mb-3 border-0 border-bottom rounded-0">
+                                    <div class="card-header bg-transparent border-0">
+                                        <span class="text-danger card-title fs-5 fw-bold">{{ category }}</span>
+                                        <p style="text-align: justify; max-height: 3.2rem; overflow: hidden"
+                                           class="text-info-emphasis">
+                                            {{ category.short_description }}
+                                        </p>
+                                    </div>
+                                    <div class="card-body p-0">
+                                        {% for food in category.fooditems.all %}
+                                            <div class="row w-100 mb-3">
+                                                <div class="text-center align-middle col-2">
+                                                    <img style="width: 75%; height: auto" src="{{ food.image.url }}"/>
+                                                </div>
+                                                <div class="text-start col-5 d-flex align-items-center">
+                                                        <span
+                                                                class="fw-bold text-primary-emphasis">{{ food }}</span>
+                                                </div>
+                                                <div class="col-3 d-flex align-items-center justify-content-start text-primary-emphasis">
+                                                    <span>{{ food.price }}</span>
+                                                </div>
+                                                <div class="text-center d-flex justify-content-end align-items-center col-2">
+                                                    <a href="#"
+                                                       data-id="{{ food.id }}"
+                                                       data-url="{% url 'decrease_cart' food.id %}"
+                                                       class="btn border border-end-0 rounded rounded-end-0 border-danger btn-outline-danger decrease_cart"><i
+                                                            class="fa-solid fa-minus"></i></a>
+                                                    <input class="form-control rounded-0 text-center border-danger"
+                                                           id="input-qty-{{ food.id }}"
+                                                           type="text" value="0" style="width: 45px">
+                                                    <a href="#"
+                                                       class="btn border border-start-0 rounded rounded-start-0 border-danger btn-outline-danger add_to_cart"
+                                                       data-id="{{ food.id }}"
+                                                       data-url="{% url 'add_to_cart' food.id %}"><i
+                                                            class="fa-solid fa-plus"></i></a>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        {% for item in cart_items %}
+                            <span id="qty-{{ item.fooditem.id }}" class="item_qty d-none"
+                                  data-quantity="{{ item.quantity }}"> {{ item.quantity }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% include 'includes/modal.html' %}
+{% endblock %}

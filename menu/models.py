@@ -23,6 +23,9 @@ class Category(models.Model):
     def __str__(self):
         return self.category_name
 
+    def short_description(self):
+        return self.description.split(".")[0] + '.'
+
 
 class FoodItem(models.Model):
     vendor = models.ForeignKey(Vendor, on_delete=models.CASCADE)
@@ -38,3 +41,5 @@ class FoodItem(models.Model):
 
     def __str__(self):
         return self.food_title
+    def short_description(self):
+        return self.description.split(".")[0] + '.'

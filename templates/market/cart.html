@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load custom_filters %}
+{% block content %}
+    <div class="container-fluid border-top p-4">
+        <div class="container">
+            <h4 class="text-center pb-1" style="margin-bottom: 0">
+                GIỎ HÀNG
+            </h4>
+            <hr/>
+            <div class="row mt-5">
+                <div class="col-9">
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="fw-bold">Danh Sách Giỏ Hàng</span>
+                        </div>
+                        <div class="card-body pt-4 pb-2">
+                            <h5 class="mb-3 text-primary-emphasis text-center d-none" id="cart_status">Giỏ hàng chưa có
+                                sản phẩm</h5>
+                            {% if cart_items %}
+                                {% for cart_item in cart_items %}
+                                    <div class="row w-100 mb-3" id="cart_item-{{ cart_item.id }}">
+                                        <div class="text-center align-middle col-2">
+                                            <img style="width: 75%; height: auto"
+                                                 src="{{ cart_item.fooditem.image.url }}"/>
+                                        </div>
+                                        <div class="text-start col-3 d-flex justify-content-center flex-column">
+                                                        <span
+                                                                class="fw-bold text-primary-emphasis">{{ cart_item.fooditem }}</span>
+                                            <a href="{% url 'vendor_detail' vendor_slug=cart_item.fooditem.vendor.vendor_slug category_slug='all' %}"
+                                               class="text-decoration-none text-danger"><i
+                                                    class="fa-solid fa-shop"></i> {{ cart_item.fooditem.vendor }}</a>
+                                        </div>
+                                        <div class="col-2 d-flex align-items-center justify-content-center text-primary-emphasis">
+                                        <span style="font-size: 16px">
+                                            {{ cart_item.fooditem.price }}
+                                        </span>
+                                        </div>
+                                        <div class="text-center d-flex justify-content-center align-items-center col-2">
+                                            <a href="#"
+                                               cart-id="{{ cart_item.id }}"
+                                               data-id="{{ cart_item.fooditem.id }}"
+                                               data-url="{% url 'decrease_cart' cart_item.fooditem.id %}"
+                                               class="btn border border-end-0 rounded rounded-end-0 border-danger btn-outline-danger decrease_cart"><i
+                                                    class="fa-solid fa-minus"></i></a>
+                                            <input class="form-control rounded-0 text-center border-danger"
+                                                   id="input-qty-{{ cart_item.fooditem.id }}"
+                                                   type="text" value="0" style="width: 45px">
+                                            <a href="#"
+                                               cart-id="{{ cart_item.id }}"
+                                               class="btn border border-start-0 rounded rounded-start-0 border-danger btn-outline-danger add_to_cart"
+                                               data-id="{{ cart_item.fooditem.id }}"
+                                               data-url="{% url 'add_to_cart' cart_item.fooditem.id %}"><i
+                                                    class="fa-solid fa-plus"></i></a>
+                                        </div>
+                                        <div class="col-2 d-flex align-items-center justify-content-center text-primary-emphasis">
+                                        <span style="font-size: 16px" id="sub_cart_item-{{ cart_item.id }}">
+                                            {{ cart_item.fooditem.price|multi:cart_item.quantity }}
+                                        </span>
+                                        </div>
+                                        <div class="col-1 d-flex align-items-center justify-content-center text-primary-emphasis">
+                                            <a href="#"
+                                               class="btn btn-outline-danger delete_cart_item"
+                                               data-id="{{ cart_item.id }}"
+                                               data-url="{% url 'delete_cart_item' cart_item.id %}"
+                                            ><i
+                                                    class="fa-solid fa-trash"></i></a>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            {% else %}
+                                <h5 class="mb-3 text-primary-emphasis text-center">Giỏ hàng chưa có sản phẩm</h5>
+                            {% endif %}
+                        </div>
+                        {% for item in cart_items %}
+                            <span id="qty-{{ item.fooditem.id }}" class="item_qty d-none"
+                                  data-quantity="{{ item.quantity }}"> {{ item.quantity }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between">
+                            <span class="fw-bold">Đơn Hàng</span>
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span class="card-text fw-bold">Tạm tính</span>
+                                <span class="price float-right">
+                                    <span id="subtotal">{{ subtotal }}</span>
+                                    <span class="currency">đ</span>
+                                </span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span class="card-text fw-bold">Phí</span>
+                                <span class="price float-right">
+                                    <span id="tax">{{ tax }}</span>
+                                    <span class="currency">đ</span>
+                                </span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span class="card-text fw-bold">Tổng cộng</span>
+                                <span class="price float-right">
+                                    <span id="total">{{ total }}</span>
+                                    <span class="currency">đ</span>
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% include 'includes/modal.html' %}
+{% endblock %}
