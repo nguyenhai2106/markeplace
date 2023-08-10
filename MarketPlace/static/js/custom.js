@@ -122,3 +122,24 @@ function set_cart_amounts(subtotal, tax, total) {
     $("#tax").text(tax);
     $("#total").text(total);
 }
+
+function payment_method_confirm() {
+    let payment_method = $("input[name='payment_method']:checked").val()
+    if (!payment_method) {
+        show_alert_modal("Vui lòng chọn phương thức thanh toán!");
+        return false;
+    } else {
+        if (modalFooter.find(".btn-login").length === 0) {
+            let link = $("<a></a>");
+            link.attr("href", "#");
+            link.addClass("btn btn-primary btn-submit");
+            link.text("Xác nhận");
+            modalFooter.prepend(link);
+        }
+        show_alert_modal("Bạn xác nhận thanh toán bằng " + payment_method);
+        $(".btn-submit").on('click', function () {
+            $("#checkout_form").submit()
+        })
+    }
+    return false;
+}

@@ -1,0 +1,188 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load custom_filters %}
+{% block content %}
+    <div class="container-fluid border-top p-4">
+        <div class="container">
+            <h4 class="text-center pb-1" style="margin-bottom: 0">
+                ĐẶT HÀNG
+            </h4>
+            <hr/>
+            <form action="{% url 'place_order' %}" method="post" id="checkout_form">
+                {% csrf_token %}
+                <div class="row mt-5">
+                    <div class="col-7">
+                        <div class="card">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <span class="fw-bold">Thông tin người nhận hàng</span>
+                                <a href="{% url 'checkout' %}" class="btn text-danger"><i
+                                        class="fa-solid fa-pen-to-square"></i> Thay đổi thông tin</a>
+                            </div>
+                            <div class="card-body">
+                                <div class="d-flex flex-column justify-content-center row-gap-2">
+                                    <span class="card-text"><b>Người nhận: </b>{{ order.last_name }} {{ order.first_name }}</span>
+                                    <span class="card-text"><b>Email: </b>{{ order.email }}</span>
+                                    <span class="card-text"><b>Số điện thoại: </b>{{ order.phone_number }}</span>
+                                    <span class="card-text"><b>Phương thức thanh toán: </b>{{ order.payment_method }}</span>
+                                    <span class="card-text"><b>Địa chỉ nhận hàng: </b>{{ order.address }}, {{ order.city }}, {{ order.state }}, {{ order.country }}.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {# Đơn hàng #}
+                    <div class="col-5">
+                        <div class="card mb-1">
+                            <div class="card-header d-flex justify-content-between">
+                                <span class="fw-bold">Đơn Hàng</div>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item d-flex justify-content-between">
+                                    <span class="card-text fw-bold">Tạm tính</span>
+                                    <span class="price float-right">
+                                    <span id="subtotal">{{ subtotal }}</span>
+                                    <span class="currency">đ</span>
+                                </span>
+                                </li>
+                                {% for tax_type, tax_info in tax_dict.items %}
+                                    <li class="list-group-item d-flex justify-content-between">
+                                        <span class="card-text fw-bold">Thuế ({{ tax_type }})</span>
+                                        <span class="price float-right">
+                                    <span id="tax">{{ tax }}</span>
+                                    <span class="currency">đ</span>
+                                </span>
+                                    </li>
+                                {% endfor %}
+                                <li class="list-group-item d-flex justify-content-between">
+                                    <span class="card-text fw-bold">Tổng cộng</span>
+                                    <span class="price float-right">
+                                    <span id="total">{{ total }}</span>
+                                    <span class="currency">đ</span>
+                                </span>
+                                </li>
+                            </ul>
+                        </div>
+                        {# PayPal Checkout #}
+                        <div class="mt-3" id="paypal-button-container"></div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    {% include 'includes/modal.html' %}
+    <script src="https://www.paypal.com/sdk/js?client-id={{ PAYPAL_CLIENT_ID }}&currency=USD"></script>
+    <script>
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        const csrftoken = getCookie('csrftoken');
+        let url = "{% url 'payment' %}"
+        let order_number = "{{ order.order_number }}"
+        let given_name = "{{ order.first_name }}"
+        let surname = "{{ order.last_name }}"
+        let address_line_1 = "{{ order.address }}"
+        let address_line_2 = "{{ order.address }}"
+        let admin_area_1 = "{{ order.state }}"
+        let admin_area_2 = "{{ order.state }}"
+        let postal_code = "{{ order.pin_code }}"
+        let phone_number = "{{ order.phone_number }}"
+        let total = "{{ order.total }}"
+        // Render the PayPal button into #paypal-button-container
+        paypal.Buttons({
+            enableStandardCardFields: true,
+            createOrder: function (data, actions) {
+                return actions.order.create({
+                    intent: 'CAPTURE', // make payment immediately
+                    payer: {
+                        name: {
+                            given_name: given_name,
+                            surname: surname
+                        },
+
+                        address: {
+                            address_line_1: address_line_1,
+                            address_line_2: address_line_2,
+                            admin_area_1: admin_area_1,
+                            admin_area_2: admin_area_2,
+                            postal_code: postal_code,
+                            country_code: "VN"
+                        },
+
+                        email_address: "khoongrox@gmail.com",
+
+                        phone: {
+                            phone_type: "MOBILE",
+                            phone_number: {
+                                national_number: phone_number
+                            }
+                        }
+                    },
+
+                    purchase_units: [{
+                        amount: {
+                            value: total,
+                            currency_code: "USD"
+                        }
+                    }],
+
+                    application_context: {
+                        shipping_preference: "NO_SHIPPING"
+                    }
+                });
+            },
+
+            onApprove: function (data, actions) {
+                return actions.order.capture().then(function (details) {
+                    {#console.log(details);#}
+                    let transaction = details.purchase_units[0].payments.captures[0];
+                    let transaction_id = transaction.id;
+                    let status = details.status;
+                    let amount = transaction.amount.value;
+                    let payment_method = 'PayPal';
+                    show_alert_modal("Bạn đã thanh toán thành công, nhân viên giao hàng sẽ sớm liên hệ với bạn. Cửa hàng xin cảm ơn.");
+                    send_transaction(transaction_id, status, payment_method, amount);
+                });
+            },
+
+            onCancel: function (data) {
+                // buyer cancelled payment
+                show_alert_modal("Bạn đã tạm dừng thanh toán.")
+            },
+
+            onError: function (err) {
+                // error that prevents buyer from doing checkout
+                show_alert_modal("Dữ liệu địa chỉ của bạn không đúng, do đó thanh toán sẽ không hoạt động.");
+            }
+        }).render("#paypal-button-container");
+
+        function send_transaction(transaction_id, status, payment_method, amount) {
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: {
+                    'order_number': order_number,
+                    'transaction_id': transaction_id,
+                    'status': status,
+                    'payment_method': payment_method,
+                    'amount': amount,
+                    'csrfmiddlewaretoken': csrftoken
+                }
+            }).done(function (response) {
+                console.log(response)
+            }).fail(function (response) {
+                show_alert_modal("Đã có lỗi xảy ra. Thành thật xin lỗi bạn!")
+            })
+        }
+    </script>
+{% endblock %}

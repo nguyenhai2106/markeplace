@@ -2,7 +2,7 @@
     box-sizing: border-box;
 }
 
-.field-holder input[type="text"], .field-holder input[type="number"],
+.field-holder input[type="text"], .field-holder input[type="number"], .field-holder input[type="email"],
 .field-holder input[type="password"] {
     border-radius: 4px;
     height: 41px;
@@ -154,3 +154,32 @@ select {
 select:focus {
     outline: none;
 }
+
+
+.radio-container {
+    display: flex;
+    align-items: center;
+}
+
+.radio-label {
+    display: inline-block;
+    cursor: pointer;
+    user-select: none;
+    margin-right: 10px;
+}
+
+input[type="radio"] {
+    display: none; /* Hide the radio button */
+}
+
+#paypal_img {
+    width: 100px;
+    border: 3px solid #ccc; /* Optional: add a border for the image */
+    border-radius: 4px;
+}
+
+/* Apply custom styles when the radio button is selected */
+input[type="radio"]:checked + .radio-label #paypal_img  {
+    border-color: darkblue; /* Border color when selected */
+}
+

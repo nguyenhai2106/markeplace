@@ -1,12 +1,15 @@
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, JsonResponse
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.db.models import Prefetch, Q
 
+from accounts.models import UserProfile
 from market.context_processors import get_cart_counter, get_cart_amounts
 from vendor.models import Vendor
 from menu.models import Category, FoodItem
 from market.models import CartItem
+from orders.forms import OrderForm
+from django.contrib import messages
 
 
 # Create your views here.
@@ -71,7 +74,8 @@ def add_to_cart(request, food_id=None):
                         'subtotal_of_item': cart_item_existed.quantity * cart_item_existed.fooditem.price,
                         'cart_amounts': get_cart_amounts(request)
                     })
-                except:
+                except Exception as e:
+                    print(f"Error occurred: {e}")
                     new_cart = CartItem.objects.create(user=request.user, fooditem=food_item, quantity=1)
                     return JsonResponse({
                         'status': 'Success',
@@ -82,7 +86,8 @@ def add_to_cart(request, food_id=None):
                         'cart_amounts': get_cart_amounts(request)
 
                     })
-            except:
+            except Exception as e:
+                print(f"Error occurred: {e}")
                 return JsonResponse({
                     'status': 'Failed',
                     'message': "Không tìm thấy món ăn đã yêu cầu!"
@@ -121,12 +126,14 @@ def decrease_cart(request, food_id):
                         'food_name': food_item.food_title,
                         'cart_amounts': get_cart_amounts(request)
                     })
-                except:
+                except Exception as e:
+                    print(f"Error occurred: {e}")
                     return JsonResponse({
                         'status': 'Failed',
                         'message': 'Không tìm thấy món ăn này trong giỏ hàng!',
                     })
-            except:
+            except Exception as e:
+                print(f"Error occurred: {e}")
                 return JsonResponse({
                     'status': 'Failed',
                     'message': "Không tìm thấy món ăn đã yêu cầu!",
@@ -166,7 +173,8 @@ def delete_cart_item(request, cart_item_id):
                         'cart_counter': get_cart_counter(request),
                         'cart_amounts': get_cart_amounts(request),
                     })
-            except:
+            except Exception as e:
+                print(f"Error occurred: {e}")
                 return JsonResponse({
                     'status': 'Failed',
                     'message': 'Không tìm thấy món ăn này trong giỏ hàng!',
@@ -191,3 +199,35 @@ def search(request):
         'vendor_count': vendor_count
     }
     return render(request, 'market/listings.html', context)
+
+
+@login_required(login_url='login')
+def checkout(request):
+    try:
+        cart_items = CartItem.objects.filter(user=request.user).order_by('created_at')
+        cart_count = cart_items.count()
+        if cart_count <= 0:
+            messages.warning(request, "Giỏ hàng của bạn chưa có sản phẩm!")
+            return redirect('cart')
+    except Exception as e:
+        return redirect('cart')
+    user_profile = UserProfile.objects.get(user=request.user)
+    default_values = {
+        'first_name': user_profile.user.first_name,
+        'last_name': user_profile.user.last_name,
+        'email': user_profile.user.email,
+        'phone_number': user_profile.user.phone_number,
+        'address': user_profile.address,
+        'country': user_profile.country,
+        'state': user_profile.state,
+        'city': user_profile.city,
+        'pin_code': user_profile.pin_code,
+
+    }
+    form = OrderForm(initial=default_values)
+    context = {
+        'form': form,
+        'cart_items': cart_items,
+        'cart_count': cart_count
+    }
+    return render(request, 'market/checkout.html', context)

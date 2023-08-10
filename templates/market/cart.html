@@ -2,6 +2,7 @@
 {% load static %}
 {% load custom_filters %}
 {% block content %}
+    {% include 'includes/alerts.html' %}
     <div class="container-fluid border-top p-4">
         <div class="container">
             <h4 class="text-center pb-1" style="margin-bottom: 0">
@@ -79,7 +80,7 @@
                     </div>
                 </div>
                 <div class="col-3">
-                    <div class="card">
+                    <div class="card mb-1">
                         <div class="card-header d-flex justify-content-between">
                             <span class="fw-bold">Đơn Hàng</span>
                         </div>
@@ -91,13 +92,15 @@
                                     <span class="currency">đ</span>
                                 </span>
                             </li>
-                            <li class="list-group-item d-flex justify-content-between">
-                                <span class="card-text fw-bold">Phí</span>
-                                <span class="price float-right">
+                            {% for tax_type, tax_info in tax_dict.items %}
+                                <li class="list-group-item d-flex justify-content-between">
+                                    <span class="card-text fw-bold">Thuế ({{ tax_type }})</span>
+                                    <span class="price float-right">
                                     <span id="tax">{{ tax }}</span>
                                     <span class="currency">đ</span>
                                 </span>
-                            </li>
+                                </li>
+                            {% endfor %}
                             <li class="list-group-item d-flex justify-content-between">
                                 <span class="card-text fw-bold">Tổng cộng</span>
                                 <span class="price float-right">
@@ -107,6 +110,7 @@
                             </li>
                         </ul>
                     </div>
+                    <a href="{% url 'checkout' %}" class="btn btn-danger mt-3 float-end w-100">Xác Nhận Đơn Hàng</a>
                 </div>
             </div>
         </div>

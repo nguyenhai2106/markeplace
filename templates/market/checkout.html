@@ -1,0 +1,200 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load custom_filters %}
+{% block content %}
+    <div class="container-fluid border-top p-4">
+        <div class="container">
+            <h4 class="text-center pb-1" style="margin-bottom: 0">
+                THANH TOÁN
+            </h4>
+            <hr/>
+            <form action="{% url 'place_order' %}" method="post" id="checkout_form">
+                {% csrf_token %}
+                <div class="row mt-5">
+                    <div class="col-7">
+                        <div class="card">
+                            <div class="card-header">
+                                <span class="fw-bold">Thông Tin Người Mua</span>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-12 col-md-6">
+                                        <div class="d-flex mb-3 align-items-center">
+                                            <div class="field-holder w-100">
+                                                <label for="first_name" class="form-label fw-bold">Họ</label>
+                                                {{ form.first_name }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <div class="d-flex mb-3 align-items-center">
+                                            <div class="field-holder w-100">
+                                                <label for="last_name" class="form-label fw-bold">Tên</label>
+                                                {{ form.last_name }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="d-flex mb-3 align-items-center">
+                                            <div class="field-holder w-100">
+                                                <label for="address" class="form-label fw-bold">Địa Chỉ</label>
+                                                {{ form.address }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-12 col-md-6">
+                                        <div class="d-flex mb-3 align-items-center">
+                                            <div class="field-holder w-100">
+                                                <label for="email" class="form-label fw-bold">Email</label>
+                                                {{ form.email }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <div class="d-flex mb-3 align-items-center">
+                                            <div class="field-holder w-100">
+                                                <label for="phone_number" class="form-label fw-bold">Số điện
+                                                    thoại</label>
+                                                {{ form.phone_number }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12 col-md-6">
+                                        <div class="d-flex mb-3 align-items-center">
+                                            <div class="field-holder w-100">
+                                                <label for="country" class="form-label fw-bold">Quốc Gia</label>
+                                                {{ form.country }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <div class="d-flex mb-3 align-items-center">
+                                            <div class="field-holder w-100">
+                                                <label for="state" class="form-label fw-bold">Bang</label>
+                                                {{ form.state }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12 col-md-6">
+                                        <div class="d-flex mb-3 align-items-center">
+                                            <div class="field-holder w-100">
+                                                <label for="city" class="form-label fw-bold">Thành
+                                                    Phố</label>
+                                                {{ form.city }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <div class="d-flex mb-3 align-items-center">
+                                            <div class="field-holder w-100">
+                                                <label for="pin_code" class="form-label fw-bold">Mã Vùng</label>
+                                                {{ form.pin_code }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {# Đơn hàng #}
+                    <div class="col-5">
+                        <div class="card mb-1">
+                            <div class="card-header d-flex justify-content-between">
+                                <span class="fw-bold">Đơn Hàng <span
+                                        class="text-primary">(Số món ăn: {{ cart_count }})</span></span>
+                            </div>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item ps-1 pe-0">
+                                    {% if cart_items %}
+                                        {% for cart_item in cart_items %}
+                                            <div class="row w-100 mb-3" id="cart_item-{{ cart_item.id }}">
+                                                <div class="text-center align-middle col-3">
+                                                    <img style="width: 75%; height: auto"
+                                                         src="{{ cart_item.fooditem.image.url }}"/>
+                                                </div>
+                                                <div class="text-start col-5 d-flex justify-content-center flex-column">
+                                                        <span
+                                                                class="fw-bold text-primary-emphasis">{{ cart_item.fooditem }}</span>
+                                                    <a href="{% url 'vendor_detail' vendor_slug=cart_item.fooditem.vendor.vendor_slug category_slug='all' %}"
+                                                       class="text-decoration-none text-danger"><i
+                                                            class="fa-solid fa-shop"></i> {{ cart_item.fooditem.vendor }}
+                                                    </a>
+                                                </div>
+                                                <div class="text-center d-flex justify-content-center align-items-center col-1">
+                                                    <span
+                                                            class="fw-bold text-primary-emphasis">{{ cart_item.quantity }}</span>
+                                                </div>
+                                                <div class="col-3 d-flex align-items-center justify-content-end text-primary-emphasis pe-1">
+                                        <span style="font-size: 16px" id="sub_cart_item-{{ cart_item.id }}">
+                                            {{ cart_item.fooditem.price|multi:cart_item.quantity }} đ
+                                        </span>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    {% else %}
+                                        <h5 class="text-primary-emphasis text-center mb-0">Giỏ hàng chưa có sản
+                                            phẩm</h5>
+                                    {% endif %}
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between">
+                                    <span class="card-text fw-bold">Tạm tính</span>
+                                    <span class="price float-right">
+                                    <span id="subtotal">{{ subtotal }}</span>
+                                    <span class="currency">đ</span>
+                                </span>
+                                </li>
+                                {% for tax_type, tax_info in tax_dict.items %}
+                                    <li class="list-group-item d-flex justify-content-between">
+                                        <span class="card-text fw-bold">Thuế ({{ tax_type }})</span>
+                                        <span class="price float-right">
+                                    <span id="tax">{{ tax }}</span>
+                                    <span class="currency">đ</span>
+                                </span>
+                                    </li>
+                                {% endfor %}
+                                <li class="list-group-item d-flex justify-content-between">
+                                    <span class="card-text fw-bold">Tổng cộng</span>
+                                    <span class="price float-right">
+                                    <span id="total">{{ total }}</span>
+                                    <span class="currency">đ</span>
+                                </span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        {#  Payment Method #}
+
+                        <div class="card mb-1 mt-4">
+                            <div class="card-header d-flex justify-content-between">
+                                <span class="fw-bold">Phương Thức Thanh Toán</span>
+                            </div>
+                            <div class="card-body">
+                                <div class="radio-container">
+                                    <input type="radio" id="radio-option-1" name="payment_method" value="PayPal">
+                                    <label for="radio-option-1" class="radio-label">
+                                        <img id="paypal_img" src="{% static 'images/PayPal.png' %}" alt="Option 1">
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-danger mt-3 float-end w-100"
+                                onclick="return payment_method_confirm();">Đặt Hàng
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    {% include 'includes/modal.html' %}
+{% endblock %}
