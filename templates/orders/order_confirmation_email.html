@@ -1,0 +1,15 @@
+{% autoescape off %}
+<p>Chào {{ user.first_name }},</p>
+<p>Chúng tôi xác nhận đơn hàng của bạn. Dưới đây là chi tiết đơn hàng:</p>
+<p>Mã Đơn Hàng: {{ order.order_number }}</p>
+<p>Ngày Đặt Hàng: {{ order.created_at }}</p>
+<p>Địa Chỉ Giao Hàng: {{ order.address }}, {{ order.city }}, {{ order.state }}, {{ order.country }}</p>
+<p>Tổng Giá Trị Đơn Hàng: {{ order.total }}đ</p>
+
+<p>Chúng tôi sẽ thông báo cho bạn khi đơn hàng được gửi đi. Nếu bạn cần hỗ trợ, xin vui lòng liên hệ với chúng tôi.</p>
+
+<p>Cảm ơn bạn đã mua sắm cùng chúng tôi.</p>
+
+<p>Trân trọng,</p>
+<p>Food Bakery</p>
+{% endautoescape %}

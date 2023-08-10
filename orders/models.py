@@ -75,3 +75,5 @@ class OrderedFood(models.Model):
 
     def __str__(self):
         return self.food_item.food_title
+
+

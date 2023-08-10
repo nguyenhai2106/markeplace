@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load custom_filters %}
+{% block content %}
+    {% include 'includes/alerts.html' %}
+    <div class="container-fluid border-top p-4">
+        <div class="container">
+            <h4 class="text-center pb-1" style="margin-bottom: 0">
+                THÔNG TIN ĐƠN HÀNG
+            </h4>
+            <hr/>
+            <div class="row mt-5" style="background-image: {% static 'images/' %}">
+                <div class="col-12 col-md-7 px-4" style="text-align: justify">
+                    <p>Chào <b>{{ order.last_name }} {{ order.first_name }}</b>,</p>
+                    <p>Cảm ơn bạn đã đặt hàng của chúng tôi. Dưới đây là thông tin chi tiết đơn hàng của bạn: </p>
+                    <p><b>Người nhận: </b>{{ order.last_name }} {{ order.first_name }}
+                        ({{ order.phone_number }})</p>
+                    <p><b>Phương thức thanh toán: </b>{{ order.payment_method }}</p>
+                    <p><strong>Mã Đơn Hàng:</strong> {{ order.order_number }}</p>
+                    <p><strong>Ngày Đặt Hàng:</strong> {{ order.created_at }}</p>
+                    <p><b>Địa chỉ nhận
+                        hàng: </b>{{ order.address }}, {{ order.city }}, {{ order.state }}, {{ order.country }}.</p>
+                    <p class="mb-0">Nếu có bất kỳ thắc mắc gì, vui lòng liên hệ số điện thoại 0585650686 để được hỗ trợ.</p>
+                </div>
+                <div class="col-12 col-md-5">
+                    <div class="card mb-1">
+                        <div class="card-header d-flex justify-content-between">
+                            <span class="fw-bold">Thông tin sản phẩm</span>
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item ps-1 pe-0">
+                                {% for ordered_food in ordered_foods %}
+                                    <div class="row w-100 mb-3 pt-3">
+                                        <div class="text-center align-middle col-3">
+                                            <img style="width: 75%; height: auto"
+                                                 src="{{ ordered_food.food_item.image.url }}"/>
+                                        </div>
+                                        <div class="text-start col-5 d-flex justify-content-center flex-column">
+                                                        <span
+                                                                class="fw-bold text-primary-emphasis">{{ ordered_food.food_item }}</span>
+                                            <a href="{% url 'vendor_detail' vendor_slug=ordered_food.food_item.vendor.vendor_slug category_slug='all' %}"
+                                               class="text-decoration-none text-danger"><i
+                                                    class="fa-solid fa-shop"></i> {{ ordered_food.food_item.vendor }}
+                                            </a>
+                                        </div>
+                                        <div class="text-center d-flex justify-content-center align-items-center col-1">
+                                                    <span
+                                                            class="fw-bold text-primary-emphasis">{{ ordered_food.quantity }}</span>
+                                        </div>
+                                        <div class="col-3 d-flex align-items-center justify-content-end text-primary-emphasis pe-1">
+                                        <span style="font-size: 16px">
+                                            {{ ordered_food.amount }} đ
+                                        </span>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span class="card-text fw-bold">Tạm tính</span>
+                                <span class="price float-right">
+                                    <span id="tax">{{ subtotal }}</span>
+                                    <span class="currency">đ</span>
+                                </span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span class="card-text fw-bold">Thuế</span>
+                                <span class="price float-right">
+                                    <span id="tax">{{ order.total_tax }}</span>
+                                    <span class="currency">đ</span>
+                                </span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span class="card-text fw-bold">Tổng cộng</span>
+                                <span class="price float-right">
+                                    <span id="total">{{ order.total }}</span>
+                                    <span class="currency">đ</span>
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% include 'includes/modal.html' %}
+{% endblock %}

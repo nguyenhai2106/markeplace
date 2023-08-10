@@ -1,4 +1,5 @@
 import simplejson as json
+from django.http import JsonResponse
 
 from django.shortcuts import render, HttpResponse, redirect
 
@@ -8,9 +9,12 @@ from market.context_processors import get_cart_amounts
 from orders.forms import OrderForm
 from orders.models import Order, Payment, OrderedFood
 from orders.utils import generate_order_number
+from accounts.utils import send_notification_email
+from django.contrib.auth.decorators import login_required
 
 
 # Create your views here.
+@login_required(login_url='login')
 def place_order(request):
     cart_items = CartItem.objects.filter(user=request.user).order_by('created_at')
     cart_count = cart_items.count()
@@ -57,6 +61,7 @@ def is_ajax(request):
     return request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
 
 
+@login_required(login_url='login')
 def payment(request):
     if is_ajax(request) and request.method == 'POST':
         # Lưu thông tin thanh toán vào model Payment
@@ -91,9 +96,55 @@ def payment(request):
             ordered_food.price = cart_item.fooditem.price
             ordered_food.amount = cart_item.fooditem.price * cart_item.quantity
             ordered_food.save()
-        return HttpResponse("Saved Ordered Food")
         # Gửi email xác nhận cho khách hàng
+        mail_subject = 'Đơn hàng của bạn đã được xác nhận - Cảm ơn bạn!'
+        mail_template = 'orders/order_confirmation_email.html'
+        context = {
+            'user': user,
+            'order': order,
+            'to_email': order.email
+        }
+        send_notification_email(mail_subject, mail_template, context)
+
         # Gửi email cho nhà hàng
+        mail_subject = 'Bạn nhận được 1 đơn hàng!'
+        mail_template = 'orders/new_order_received.html'
+        to_emails = []
+        for cart_item in cart_items:
+            if cart_item.fooditem.vendor.user.email not in to_emails:
+                to_emails.append(cart_item.fooditem.vendor.user.email)
+        context = {
+            'order': order,
+            'to_email': to_emails
+        }
+        send_notification_email(mail_subject, mail_template, context)
         # Xóa giỏ hàng
+        cart_items.delete()
         # Trả kết quả cho request
+        response = {
+            'order_number': order_number,
+            'transaction_id': transaction_id,
+        }
+        return JsonResponse(response)
     return HttpResponse("Payment Views")
+
+
+def order_completed(request):
+    order_number = request.GET.get('order_number')
+    transaction_id = request.GET.get('transaction_id')
+    print(order_number, transaction_id)
+    try:
+        order = Order.objects.get(order_number=order_number, payment__transaction_id=transaction_id, is_ordered=True)
+        ordered_foods = OrderedFood.objects.filter(order=order)
+        subtotal = 0
+        for ordered_food in ordered_foods:
+            subtotal += ordered_food.amount
+        context = {
+            'order': order,
+            'ordered_foods': ordered_foods,
+            'subtotal': subtotal
+        }
+        return render(request, 'orders/order_completed.html', context)
+    except Exception as e:
+        print(e)
+        return redirect('home')

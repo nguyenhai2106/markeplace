@@ -33,7 +33,7 @@
                     <div class="col-5">
                         <div class="card mb-1">
                             <div class="card-header d-flex justify-content-between">
-                                <span class="fw-bold">Đơn Hàng</div>
+                                <span class="fw-bold">Đơn Hàng</span></div>
                             <ul class="list-group list-group-flush">
                                 <li class="list-group-item d-flex justify-content-between">
                                     <span class="card-text fw-bold">Tạm tính</span>
@@ -88,6 +88,7 @@
 
         const csrftoken = getCookie('csrftoken');
         let url = "{% url 'payment' %}"
+        let order_completed_url = "{% url 'order_completed' %}"
         let order_number = "{{ order.order_number }}"
         let given_name = "{{ order.first_name }}"
         let surname = "{{ order.last_name }}"
@@ -150,7 +151,7 @@
                     let status = details.status;
                     let amount = transaction.amount.value;
                     let payment_method = 'PayPal';
-                    show_alert_modal("Bạn đã thanh toán thành công, nhân viên giao hàng sẽ sớm liên hệ với bạn. Cửa hàng xin cảm ơn.");
+                    show_alert_modal("Bạn đã thanh toán thành công, đơn hàng của bạn đang được xử lý, vui lòng chờ trong giây lát.");
                     send_transaction(transaction_id, status, payment_method, amount);
                 });
             },
@@ -179,7 +180,8 @@
                     'csrfmiddlewaretoken': csrftoken
                 }
             }).done(function (response) {
-                console.log(response)
+                {#console.log(response)#}
+                window.location.href = order_completed_url + "?order_number=" + response.order_number + "&transaction_id=" + response.transaction_id
             }).fail(function (response) {
                 show_alert_modal("Đã có lỗi xảy ra. Thành thật xin lỗi bạn!")
             })

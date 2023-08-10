@@ -1,0 +1,10 @@
+{% autoescape off %}
+<p>Xin chào các bạn,</p>
+<p>Chúng tôi vừa đặt một đơn hàng từ bạn cho khách hàng của chúng tôi.</p>
+<p><strong>Mã Đơn Hàng:</strong> {{ order.order_number }}</p>
+<p><strong>Ngày Đặt Hàng:</strong> {{ order.created_at }}</p>
+<p><strong>Tên Khách Hàng:</strong> {{ order.first_name }} {{ order.last_name }}</p>
+<p>Vui lòng chuẩn bị và giao hàng theo đơn hàng trên.</p>
+<p>Xin cảm ơn!</p>
+<p>Food Bakery</p>
+{% endautoescape %}
