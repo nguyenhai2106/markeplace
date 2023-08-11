@@ -6,23 +6,28 @@
     <div class="container-fluid border-top p-4">
         <div class="container">
             <h4 class="text-center pb-1" style="margin-bottom: 0">
-                THÔNG TIN ĐƠN HÀNG
+                CHI TIẾT ĐƠN HÀNG
             </h4>
             <hr/>
             <div class="row mt-5" style="background-image: {% static 'images/' %}">
-                <div class="col-12 col-md-7 px-4" style="text-align: justify">
-                    <p>Chào <b>{{ order.last_name }} {{ order.first_name }}</b>,</p>
-                    <p>Cảm ơn bạn đã đặt hàng của chúng tôi. Dưới đây là thông tin chi tiết đơn hàng của bạn: </p>
-                    <p><b>Người nhận: </b>{{ order.last_name }} {{ order.first_name }}
-                        ({{ order.phone_number }})</p>
-                    <p><b>Phương thức thanh toán: </b>{{ order.payment_method }}</p>
-                    <p><strong>Mã Đơn Hàng:</strong> {{ order.order_number }}</p>
-                    <p><strong>Ngày Đặt Hàng:</strong> {{ order.created_at }}</p>
-                    <p><b>Địa chỉ nhận
-                        hàng: </b>{{ order.address }}, {{ order.city }}, {{ order.state }}, {{ order.country }}.</p>
-                    <p class="mb-0">Nếu có bất kỳ thắc mắc gì, vui lòng liên hệ số điện thoại 0585650686 để được hỗ trợ.</p>
+                <div class="col-3">
+                    {% include 'includes/vendor_sidebar.html' %}
                 </div>
-                <div class="col-12 col-md-5">
+                <div class="col-9">
+                    <div class="card mb-4">
+                        <div class="card-header d-flex justify-content-between">
+                            <span class="fw-bold">Thông tin người nhận</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-flex flex-column justify-content-center row-gap-2">
+                                <span class="card-text"><b>Người nhận: </b>{{ order.last_name }} {{ order.first_name }}</span>
+                                <span class="card-text"><b>Email: </b>{{ order.email }}</span>
+                                <span class="card-text"><b>Số điện thoại: </b>{{ order.phone_number }}</span>
+                                <span class="card-text"><b>Phương thức thanh toán: </b>{{ order.payment_method }}</span>
+                                <span class="card-text"><b>Địa chỉ nhận hàng: </b>{{ order.address }}, {{ order.city }}, {{ order.state }}, {{ order.country }}.</span>
+                            </div>
+                        </div>
+                    </div>
                     <div class="card mb-1">
                         <div class="card-header d-flex justify-content-between">
                             <span class="fw-bold">Thông tin sản phẩm</span>
@@ -49,7 +54,7 @@
                                         </div>
                                         <div class="col-3 d-flex align-items-center justify-content-end text-primary-emphasis pe-1">
                                         <span style="font-size: 16px">
-                                            ${{ ordered_food.amount }}
+                                            ${{ ordered_food.amount|floatformat:2 }}
                                         </span>
                                         </div>
                                     </div>
@@ -58,19 +63,19 @@
                             <li class="list-group-item d-flex justify-content-between">
                                 <span class="card-text fw-bold">Tạm tính</span>
                                 <span class="price float-right">
-                                    <span id="tax">${{ subtotal|floatformat:2 }}</span>
+                                    <span id="tax">${{ order_subtotal|floatformat:2 }}</span>
                                 </span>
                             </li>
                             <li class="list-group-item d-flex justify-content-between">
                                 <span class="card-text fw-bold">Thuế</span>
                                 <span class="price float-right">
-                                    <span id="tax">${{ order.total_tax|floatformat:2 }}</span>
+                                    <span id="tax">${{ tax|floatformat:2 }}</span>
                                 </span>
                             </li>
                             <li class="list-group-item d-flex justify-content-between">
                                 <span class="card-text fw-bold">Tổng cộng</span>
                                 <span class="price float-right">
-                                    <span id="total">${{ order.total|floatformat:2 }}</span>
+                                    <span id="total">${{ total|floatformat:2 }}</span>
                                 </span>
                             </li>
                         </ul>

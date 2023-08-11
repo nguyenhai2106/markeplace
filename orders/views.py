@@ -3,9 +3,10 @@ from django.http import JsonResponse
 
 from django.shortcuts import render, HttpResponse, redirect
 
-from market.models import CartItem
+from market.models import CartItem, Tax
 from django.contrib import messages
 from market.context_processors import get_cart_amounts
+from menu.models import FoodItem
 from orders.forms import OrderForm
 from orders.models import Order, Payment, OrderedFood
 from orders.utils import generate_order_number
@@ -21,39 +22,66 @@ def place_order(request):
     if cart_count <= 0:
         messages.warning(request, "Giỏ hàng của bạn chưa có sản phẩm!")
         return redirect('cart')
-    subtotal = get_cart_amounts(request)['subtotal']
+
+    vendors_ids = []
+    for cart_item in cart_items:
+        vendors_id = cart_item.fooditem.vendor.id
+        if vendors_id not in vendors_ids:
+            vendors_ids.append(vendors_id)
+
+    subtotal = 0
+    check_vendor = {}
+    total_data = {}
+    tax = Tax.objects.get(is_active=True)
+    for cart_item in cart_items:
+        food_item = FoodItem.objects.get(pk=cart_item.fooditem.id, vendor_id__in=vendors_ids)
+        vendors_id = food_item.vendor.id
+        if vendors_id in check_vendor:
+            subtotal = check_vendor[vendors_id]
+            subtotal += food_item.price * cart_item.quantity
+            check_vendor[vendors_id] = subtotal
+        else:
+            subtotal = food_item.price * cart_item.quantity
+            check_vendor[vendors_id] = subtotal
+
+        tax_dict = {}
+        tax_dict.update({tax.tax_type: {str(tax.tax_percentage): str(subtotal * tax.tax_percentage / 100)}})
+
+        total_data.update({food_item.vendor.id: {str(subtotal): str(tax_dict)}})
+
     total_tax = get_cart_amounts(request)['tax']
     total = get_cart_amounts(request)['total']
     tax_data = get_cart_amounts(request)['tax_dict']
 
     if request.method == 'POST':
         form = OrderForm(request.POST)
-        if form.is_valid():
-            order = Order()
-            order.first_name = form.cleaned_data['first_name']
-            order.last_name = form.cleaned_data['last_name']
-            order.phone_number = form.cleaned_data['phone_number']
-            order.email = form.cleaned_data['email']
-            order.address = form.cleaned_data['address']
-            order.country = form.cleaned_data['country']
-            order.state = form.cleaned_data['state']
-            order.city = form.cleaned_data['city']
-            order.pin_code = form.cleaned_data['pin_code']
-            order.payment_method = request.POST['payment_method']
-            order.user = request.user
-            order.total = total
-            order.tax_data = json.dumps(tax_data)
-            order.total_tax = total_tax
-            order.save()
-            order.order_number = generate_order_number(order.id)
-            order.save()
-            context = {
-                'order': order
-            }
-            return render(request, 'orders/place_order.html', context)
-        else:
-            print(form.errors)
-
+    if form.is_valid():
+        order = Order()
+        order.first_name = form.cleaned_data['first_name']
+        order.last_name = form.cleaned_data['last_name']
+        order.phone_number = form.cleaned_data['phone_number']
+        order.email = form.cleaned_data['email']
+        order.address = form.cleaned_data['address']
+        order.country = form.cleaned_data['country']
+        order.state = form.cleaned_data['state']
+        order.city = form.cleaned_data['city']
+        order.pin_code = form.cleaned_data['pin_code']
+        order.payment_method = request.POST['payment_method']
+        order.user = request.user
+        order.total = total
+        order.tax_data = json.dumps(tax_data)
+        order.total_tax = total_tax
+        order.total_data = total_data
+        order.save()
+        order.order_number = generate_order_number(order.id)
+        order.vendors.add(*vendors_ids)
+        order.save()
+        context = {
+            'order': order
+        }
+        return render(request, 'orders/place_order.html', context)
+    else:
+        print(form.errors)
     return render(request, 'orders/place_order.html')
 
 

@@ -1,7 +1,9 @@
 // noinspection DuplicatedCode
-
 let modalFooter = $("#modalFooter")
 $(document).ready(function () {
+    $('#myOrdersTable').DataTable({
+        "lengthChange": false
+    });
 
     $('.add_to_cart').on('click', function (e) {
         e.preventDefault();
@@ -129,7 +131,7 @@ function payment_method_confirm() {
         show_alert_modal("Vui lòng chọn phương thức thanh toán!");
         return false;
     } else {
-        if (modalFooter.find(".btn-login").length === 0) {
+        if (modalFooter.find(".btn-submit").length === 0) {
             let link = $("<a></a>");
             link.attr("href", "#");
             link.addClass("btn btn-primary btn-submit");

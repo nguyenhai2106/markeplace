@@ -34,7 +34,7 @@
                                         </div>
                                         <div class="col-2 d-flex align-items-center justify-content-center text-primary-emphasis">
                                         <span style="font-size: 16px">
-                                            {{ cart_item.fooditem.price }}
+                                            ${{ cart_item.fooditem.price }}
                                         </span>
                                         </div>
                                         <div class="text-center d-flex justify-content-center align-items-center col-2">
@@ -56,7 +56,7 @@
                                         </div>
                                         <div class="col-2 d-flex align-items-center justify-content-center text-primary-emphasis">
                                         <span style="font-size: 16px" id="sub_cart_item-{{ cart_item.id }}">
-                                            {{ cart_item.fooditem.price|multi:cart_item.quantity }}
+                                            ${{ cart_item.fooditem.price|multi:cart_item.quantity }}
                                         </span>
                                         </div>
                                         <div class="col-1 d-flex align-items-center justify-content-center text-primary-emphasis">
@@ -88,24 +88,20 @@
                             <li class="list-group-item d-flex justify-content-between">
                                 <span class="card-text fw-bold">Tạm tính</span>
                                 <span class="price float-right">
-                                    <span id="subtotal">{{ subtotal }}</span>
-                                    <span class="currency">đ</span>
+                                    <span id="subtotal">${{ subtotal }}</span>
                                 </span>
                             </li>
                             {% for tax_type, tax_info in tax_dict.items %}
                                 <li class="list-group-item d-flex justify-content-between">
                                     <span class="card-text fw-bold">Thuế ({{ tax_type }})</span>
                                     <span class="price float-right">
-                                    <span id="tax">{{ tax }}</span>
-                                    <span class="currency">đ</span>
-                                </span>
+                                        <span id="tax">${{ tax }}</span>
+                                    </span>
                                 </li>
                             {% endfor %}
                             <li class="list-group-item d-flex justify-content-between">
                                 <span class="card-text fw-bold">Tổng cộng</span>
-                                <span class="price float-right">
-                                    <span id="total">{{ total }}</span>
-                                    <span class="currency">đ</span>
+                                    <span id="total">${{ total }}</span>
                                 </span>
                             </li>
                         </ul>

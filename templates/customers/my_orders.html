@@ -19,60 +19,19 @@
                         {% include 'includes/customer_sidebar.html' %}
                     </div>
                     <div class="col-9">
-                        <div class="card mb-3">
-                            <div class="card-header">
-                                <span class="fw-bold">Tổng Quan</span>
-                            </div>
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <div class="card">
-                                            <div class="card-header text-center">
-                                                <span class="fw-bold">Tổng đơn hàng</span>
-                                            </div>
-                                            <ul class="list-group list-group-flush text-center">
-                                                <li class="list-group-item text-danger">
-                                                    <a href="#"><span
-                                                            class="card-title">${{ total_order_amount }}</span></a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="card">
-                                            <div class="card-header text-center">
-                                                <span class="fw-bold">Số lượng đơn hàng</span>
-                                            </div>
-                                            <ul class="list-group list-group-flush text-center">
-                                                <li class="list-group-item">
-                                                    <a href="#"><span class="card-title">{{ total_order_count }}</span></a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="card">
-                                            <div class="card-header text-center">
-                                                <span class="fw-bold">Số lượng món ăn đã đặt</span>
-                                            </div>
-                                            <ul class="list-group list-group-flush text-center">
-                                                <li class="list-group-item">
-                                                    <a href="#"><span
-                                                            class="card-title">{{ ordered_foods_count }}</span></a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                         <div class="card">
                             <div class="card-header">
                                 <span class="fw-bold">Đơn Hàng Gần Đây</span>
                             </div>
                             <div class="card-body">
-                                {% if recent_orders %}
-                                    <table class="table mt-2">
+                                <select class="form-select" aria-label="Default select example">
+                                    <option selected>Chọn Trạng Thái Đơn Hàng</option>
+                                    {% for status in order_status %}
+                                        <option value={{ status }}>{{ status }}</option>
+                                    {% endfor %}
+                                </select>
+                                {% if orders %}
+                                    <table class="table mt-2 mb-3" id="myOrdersTable">
                                         <thead>
                                         <tr>
                                             <th scope="col" class="text-center">Mã Đơn Hàng</th>
@@ -84,7 +43,7 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        {% for order in recent_orders %}
+                                        {% for order in orders %}
                                             <tr class="align-middle">
                                                 <td class="text-center">
                                                     <a href="{% url 'order_detail' order.order_number %}"
@@ -110,10 +69,11 @@
                                                 </td>
                                             </tr>
                                         {% endfor %}
+
                                         </tbody>
                                     </table>
                                 {% else %}
-                                    <h5 class="text-info-emphasis text-center mt-1 mb-1">Bạn chưa có đơn hàng nào</h5>
+                                    <h5 class="text-info-emphasis text-center mt-3 mb-0">Bạn chưa có đơn hàng nào</h5>
                                 {% endif %}
                             </div>
                         </div>

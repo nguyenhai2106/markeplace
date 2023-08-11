@@ -18,19 +18,18 @@
         <li class="list-group-item ">
             <a href="{% url 'customer' %}"
                class="{% if 'custDashboard' in request.path or '/customer/' == request.path %}text-danger{% endif %}">
-                <i class="fa-solid fa-gauge"></i>&nbsp;&nbsp;&nbsp;&nbsp;Dashboard</a>
+                <i class="fa-solid fa-gauge"></i>&nbsp;&nbsp;&nbsp;&nbsp;Tổng Quan</a>
         </li>
         <li class="list-group-item">
             <a href="{% url 'customer_profile' %}"
                class=" {% if 'profile' in request.path %}text-danger{% endif %}"><i
-                    class="fa-solid fa-bars"></i>&nbsp;&nbsp;&nbsp;&nbsp;Profile Setting</a></li>
-        <li class="list-group-item"><a href="{% url 'vendorDashboard' %}"><i
-                class="fa-solid fa-cart-shopping"></i>&nbsp;&nbsp;&nbsp;&nbsp;My Order</a>
+                    class="fa-solid fa-bars"></i>&nbsp;&nbsp;&nbsp;&nbsp;Thông Tin Tài Khoản</a></li>
+        <li class="list-group-item"><a href="{% url 'my_orders' %}"
+                                       class=" {% if 'my_orders' in request.path or 'order_detail' in request.path %}text-danger{% endif %}"><i
+                class="fa-solid fa-cart-shopping"></i>&nbsp;&nbsp;&nbsp;&nbsp;Đơn Hàng</a>
         </li>
-        <li class="list-group-item"><a href="{% url 'vendorDashboard' %}"><i
-                class="fa-solid fa-lock"></i>&nbsp;&nbsp;&nbsp;&nbsp;Change Password</a></li>
-        <li class="list-group-item"><a href="{% url 'vendorDashboard' %}"><i
-                class="fa-solid fa-arrow-right-from-bracket"></i>&nbsp;&nbsp;&nbsp;&nbsp;Sign Out</a>
+        <li class="list-group-item"><a href="{% url 'logout' %}"><i
+                class="fa-solid fa-arrow-right-from-bracket"></i>&nbsp;&nbsp;&nbsp;&nbsp;Đăng Xuất</a>
         </li>
     </ul>
 </div>

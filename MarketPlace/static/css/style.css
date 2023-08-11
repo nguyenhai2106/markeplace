@@ -183,3 +183,19 @@ input[type="radio"]:checked + .radio-label #paypal_img  {
     border-color: darkblue; /* Border color when selected */
 }
 
+#myOrdersTable_wrapper {
+    margin-top: 20px;
+}
+
+select[name="myOrdersTable_length"] {
+    width: 100px;
+}
+
+#myOrdersTable_filter {
+    text-align: center;
+}
+
+#myOrdersTable_filter label input[type="search"] {
+    width: 400px;
+    margin-left: 10px;
+}

@@ -18,33 +18,23 @@
         <li class="list-group-item ">
             <a href="{% url 'vendorDashboard' %}"
                class="{% if 'vendorDashboard' in request.path or '/accounts/vendor/' in request.path %}text-danger{% endif %}">
-                <i class="fa-solid fa-gauge"></i>&nbsp;&nbsp;&nbsp;&nbsp;DASHBOARD</a>
+                <i class="fa-solid fa-gauge"></i>&nbsp;&nbsp;&nbsp;&nbsp;TỔNG QUAN</a>
         </li>
         <li class="list-group-item">
             <a href="{% url 'vendorProfile' %}"
                class="{% if 'profile' in request.path %}text-danger{% endif %}"><i
-                    class="fa-solid fa-utensils"></i>&nbsp;&nbsp;&nbsp;&nbsp;MY
-                RESTAURANT</a></li>
+                    class="fa-solid fa-utensils"></i>&nbsp;&nbsp;&nbsp;&nbsp;THÔNG TIN</a></li>
         <li class="list-group-item">
             <a href="{% url 'menu_builder' %}"
                class=" {% if 'menu-builder' in request.path %}text-danger{% endif %}"><i
-                    class="fa-solid fa-bars"></i>&nbsp;&nbsp;&nbsp;&nbsp;MENU
-                BUILDER</a></li>
-        <li class="list-group-item"><a href="{% url 'vendorDashboard' %}" class="text-secondary"><i
-                class="fa-solid fa-cart-shopping"></i>&nbsp;&nbsp;&nbsp;&nbsp;ORDERS</a>
+                    class="fa-solid fa-bars"></i>&nbsp;&nbsp;&nbsp;&nbsp;TẠO THỰC ĐƠN</a></li>
+        <li class="list-group-item"><a href="{% url 'vendor_my_orders' %}"
+                                       class=" {% if 'order_detail' in request.path or 'my_orders' in request.path %}text-danger{% endif %}"
+                                       class="text-secondary"><i
+                class="fa-solid fa-cart-shopping"></i>&nbsp;&nbsp;&nbsp;&nbsp;ĐƠN HÀNG</a>
         </li>
-        <li class="list-group-item"><a href="{% url 'vendorDashboard' %}" class="text-secondary"><i
-                class="fa-solid fa-money-check-dollar"></i>&nbsp;&nbsp;&nbsp;&nbsp;EARNINGS</a>
-        </li>
-        <li class="list-group-item"><a href="{% url 'vendorDashboard' %}" class="text-secondary"><i
-                class="fa-regular fa-file"></i>&nbsp;&nbsp;&nbsp;&nbsp;STATEMENT</a>
-        </li>
-        <li class="list-group-item"><a href="{% url 'vendorDashboard' %}" class="text-secondary"><i
-                class="fa-solid fa-lock"></i>&nbsp;&nbsp;&nbsp;&nbsp;CHANGE
-            PASSWORD</a></li>
-        <li class="list-group-item"><a href="{% url 'vendorDashboard' %}" class="text-secondary"><i
-                class="fa-solid fa-arrow-right-from-bracket"></i>&nbsp;&nbsp;&nbsp;&nbsp;SIGN
-            OUT</a>
+        <li class="list-group-item"><a href="{% url 'logout' %}" class="text-secondary"><i
+                class="fa-solid fa-arrow-right-from-bracket"></i>&nbsp;&nbsp;&nbsp;&nbsp;ĐĂNG XUẤT</a>
         </li>
     </ul>
 </div>

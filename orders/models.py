@@ -61,6 +61,13 @@ class Order(models.Model):
     def __str__(self):
         return self.order_number
 
+    @classmethod
+    def get_total_by_vendor(cls, order, user):
+        vendor = Vendor.objects.get(user=user)
+        subtotal = 0
+        tax = 0
+        print(order.tax_data)
+
 
 class OrderedFood(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
@@ -75,5 +82,3 @@ class OrderedFood(models.Model):
 
     def __str__(self):
         return self.food_item.food_title
-
-

@@ -205,8 +205,8 @@ def search(request):
 def checkout(request):
     try:
         cart_items = CartItem.objects.filter(user=request.user).order_by('created_at')
-        cart_count = cart_items.count()
-        if cart_count <= 0:
+        cart_count = get_cart_counter(request)
+        if cart_count['cart_count'] <= 0:
             messages.warning(request, "Giỏ hàng của bạn chưa có sản phẩm!")
             return redirect('cart')
     except Exception as e:
@@ -228,6 +228,6 @@ def checkout(request):
     context = {
         'form': form,
         'cart_items': cart_items,
-        'cart_count': cart_count
+        'cart_count': cart_count['cart_count']
     }
     return render(request, 'market/checkout.html', context)

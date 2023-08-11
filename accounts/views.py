@@ -9,6 +9,7 @@ from django.core.exceptions import PermissionDenied
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.contrib.auth.tokens import default_token_generator
 from vendor.models import Vendor
+from orders.models import Order, OrderedFood
 
 
 # Create your views here.
@@ -103,8 +104,13 @@ def myAccount(request):
 @user_passes_test(check_role_vendor)
 def vendorDashboard(request):
     vendor = Vendor.objects.get(user=request.user)
+    orders = Order.objects.filter(vendors__in=[vendor.id], is_ordered=True).order_by('-updated_at')
+    for order in orders:
+        order.get_total_by_vendor(order, request.user)
     context = {
-        'vendor': vendor
+        'vendor': vendor,
+        'recent_orders': orders[:10],
+        'order_count': orders.count()
     }
     return render(request, 'accounts/vendorDashboard.html', context)
 
@@ -112,7 +118,28 @@ def vendorDashboard(request):
 @login_required(login_url='login')
 @user_passes_test(check_role_customer)
 def custDashboard(request):
-    return render(request, 'accounts/custDashboard.html')
+    orders = Order.objects.filter(user=request.user).order_by("-updated_at")
+    ordered_foods = OrderedFood.objects.filter(user=request.user)
+    ordered_foods_count = ordered_foods.count()
+    total_order_amount = 0
+    total_order_count = 0
+    order_status = []
+    for order in orders:
+        total_order_amount += order.total
+        total_order_count += 1
+        if order.status not in order_status:
+            order_status.append(order.status)
+    recent_orders = orders[:5]
+
+    context = {
+        'total_order_count': total_order_count,
+        'total_order_amount': total_order_amount,
+        'orders': orders,
+        'order_status': order_status,
+        'ordered_foods_count': ordered_foods_count,
+        'recent_orders': recent_orders
+    }
+    return render(request, 'accounts/custDashboard.html', context)
 
 
 def activate(request, uidb64, token):

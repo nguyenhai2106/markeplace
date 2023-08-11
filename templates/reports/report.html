@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <!-- Main Section Start -->
+    <div class="main-section border-top mb-5 container">
+        <div class="row">
+            <div class="col-12 col-md-6">
+                <h5 class="text-center mt-5 text-primary">Biểu đồ doanh thu</h5>
+                <img style="width: 100%;" src="data:image/png;base64,{{ revenue_chart }}" alt="Doanh thu ngày"
+                     class="border rounded mt-4 border-info py-3"/>
+            </div>
+            <div class="col-12 col-md-6">
+                <h5 class="text-center mt-5 text-primary">Biểu đồ phân phối Giá trị đơn hàng</h5>
+                <img style="width: 100%" src="data:image/png;base64,{{ distribution_chart }}" alt="Doanh thu ngày"
+                     class="border rounded mt-4 border-info py-3"/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 col-md-6">
+                <h5 class="text-center mt-5 text-primary">Tỷ lệ doanh thu theo Danh mục</h5>
+                <img style="width: 100%"  src="data:image/png;base64,{{ category_ratio_chart_base64 }}" alt="Category Ratio Chart"
+                     class="border rounded mt-4 border-info">
+            </div>
+        </div>
+    </div>
+    <!-- Main Section End -->
+{% endblock %}

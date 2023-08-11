@@ -1,15 +1,18 @@
+import json
+
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.db import IntegrityError
 from django.http import QueryDict
 from django.shortcuts import render, redirect, get_object_or_404
 from accounts.forms import UserForm, UserProfileForm
 from accounts.views import check_role_vendor
+from orders.models import Order, OrderedFood
 from vendor.forms import VendorForm, Vendor
 from accounts.models import User
 from django.template.defaultfilters import slugify
 from accounts.models import UserProfile
 from django.contrib import messages
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
 from accounts.utils import send_verification_email
 from menu.models import Category, FoodItem
 from menu.forms import CategoryForm, FoodItemForm
@@ -242,3 +245,39 @@ def delete_food(request, pk=None):
     food_item.delete()
     messages.warning(request, f"Món ăn '{food_item.food_title}' đã bị xóa")
     return redirect('food_items_by_category', food_item.category.id)
+
+
+@login_required(login_url='login')
+@user_passes_test(check_role_vendor)
+def my_orders(request):
+    orders = Order.objects.filter(vendors=get_vendor(request)).order_by('-updated_at')
+    print(orders)
+    order_status = []
+    for order in orders:
+        if order.status not in order_status:
+            order_status.append(order.status)
+    context = {
+        'orders': orders,
+        'order_status': order_status
+    }
+    return render(request, 'vendor/my_orders.html', context)
+
+
+def order_detail(request, order_number):
+    order = Order.objects.get(order_number=order_number)
+    ordered_foods = OrderedFood.objects.filter(order=order, food_item__vendor=get_vendor(request))
+    order_subtotal = 0
+    for ordered_food in ordered_foods:
+        order_subtotal += ordered_food.amount
+    tax_data = json.loads(order.tax_data)
+    tax_rate = float(list(tax_data["VAT"].keys())[0])
+    tax = order_subtotal * tax_rate / 100
+    total = order_subtotal + tax
+    context = {
+        'order': order,
+        'ordered_foods': ordered_foods,
+        'order_subtotal': order_subtotal,
+        'total': total,
+        'tax': tax
+    }
+    return render(request, 'vendor/order_detail.html', context)
